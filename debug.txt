@@ -1,0 +1,6 @@
+  1. 
+cd  E:\Works\DoctorTeach\T001\website> 
+ 运行 E:\Works\DoctorTeach\T04php7.3.4nts\php -S localhost:58006
+ 访问 http://localhost:58006/resetpw.php
+
+2 vs code 运行 debug
