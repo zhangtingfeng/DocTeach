@@ -16,6 +16,7 @@ class DoModel extends Model
     // 新增访问
     public function addVisits($id)
     {
+       // $visitsrand=rand(100,250);   //随机值在100~250之间，就不用默认是1这么尴尬了
         $data = array(
             'visits' => '+=1'
         );
