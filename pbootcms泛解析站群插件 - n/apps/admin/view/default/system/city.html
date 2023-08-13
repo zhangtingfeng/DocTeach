@@ -1,0 +1,330 @@
+{include file='common/head.html'}
+<div class="layui-body">
+    {if([$list])}
+    <div class="layui-tab layui-tab-brief" lay-filter="tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this" lay-id="t1">城市内容</li>
+            <li lay-id="t2">城市新增</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <form action="{url./admin/City/mod}" id="contentForm" name="contentForm" method="post" class="layui-form" onkeydown="if(event.keyCode==13) return false;">
+                    <input type="hidden" name="formcheck" value="{$formcheck}" >
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th width="50"><input type="checkbox" class="checkbox" lay-ignore id="checkall" title="全选"></th>
+                                <th width="50">ID</th>
+                                <th>城市名称</th>
+                                <th>城市拼音</th>
+                                <th>排序</th>
+                                <th>状态</th>
+                                <th>置顶</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach $lists(key,value)}
+                            <tr>
+                                <td>
+		                    		<input type="checkbox" class="checkbox checkitem" lay-ignore name="list[]" value="[value->id]">
+		                    		<input type="hidden" name="listall[]" value="[value->id]">
+		                    	</td>
+                                <td>[value->id]</td>
+                            
+                                <td><a href="{url.admin/City/index/pid/'.$value->id.'}" class="text-blue">[value->title] <span class="layui-badge layui-bg-orange">[value->count]</span></a></td>
+                               
+                                <td>[value->etitle]</td>   
+                                  <td class="table-input"><input type="text" lay-ignore class="layui-input" name="sorting[]" value="[value->sorting]"></td>
+                                
+                                <td>
+                                    {if($value->status)}
+                                    <a href="{url./admin/'.C.'/mod/id/'.$value->id.'/field/status/value/0}"><i class='fa fa-toggle-on' style="vertical-align:middle"></i></a>
+                                    {else}
+                                    <a href="{url./admin/'.C.'/mod/id/'.$value->id.'/field/status/value/1}"><i class='fa fa-toggle-off' style="vertical-align:middle"></i></a>
+                                    {/if}
+                                </td>
+                                <td>
+                                    {if($value->istop)}
+                                    <a href="{url./admin/'.C.'/mod/id/'.$value->id.'/field/istop/value/0}"><i class='fa fa-toggle-on' style="vertical-align:middle"></i></a>
+                                    {else}
+                                    <a href="{url./admin/'.C.'/mod/id/'.$value->id.'/field/istop/value/1}"><i class='fa fa-toggle-off' style="vertical-align:middle"></i></a>
+                                    {/if}
+                                </td>
+                              <td>
+                                    {fun=get_btn_mod($value->id,'id')}
+                                    {fun=get_btn_del($value->id,'id')}
+                                </td>
+                            </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                    <div class="layui-btn-group">
+	                    {if(check_level('del'))}
+				     		<button type="submit" name="submit" onclick="return setDelAction();" class="layui-btn layui-btn-sm">批量删除</button>
+				     	{/if}
+				     	{if(check_level('mod'))}
+				     		<button type="submit" name="submit" value="sorting" class="layui-btn layui-btn-sm">保存排序</button>
+				     	 {/if}
+			     	</div>
+                    <script>
+                        function setDelAction(){
+                            document.contentForm.action = "{url./admin/City/del}"; 
+                            return confirm("您确定要删除选中的内容么？");
+                        }
+                    </script>
+                </form>
+            </div>
+           <div class="layui-tab-item">
+	  	  		<form action="{url./admin/City/add}" method="post" class="layui-form" lay-filter="sort">
+                    <input type="hidden" name="formcheck" value="{$formcheck}" >
+		  	     	<div class="layui-tab">
+					  <ul class="layui-tab-title">
+					    <li class="layui-this">基本内容</li>
+					    <li>高级内容</li>
+					  </ul>
+					  <div class="layui-tab-content">
+					    <div class="layui-tab-item layui-show">
+			            <div class="layui-form-item">
+                        <label class="layui-form-label">上级城市   <span class="layui-text-red">*</span></label>
+                        <div class="layui-input-block">
+                            <select name="pid" lay-verify="required">
+                               <option value="0">顶级</option>
+                               {foreach $city_select(key,value)}
+                               <option value="[value->id]">[value->title]</option>
+                               {/foreach}
+                           </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">城市名称 <span class="layui-text-red">*</span></label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" required lay-verify="required" placeholder="请输入城市名称" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">城市拼音<span class="layui-text-red">*</span></label>
+                        <div class="layui-input-block">
+                            <input type="text" name="etitle" placeholder="请输入城市拼音" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">参数</label>
+                        <div class="layui-input-block">
+                           <input type="checkbox" name="istop" value="1" title="推荐">
+                        </div>
+                   </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="status" value="1" title="显示" checked>
+							<input type="radio" name="status" value="0" title="隐藏">
+                        </div>
+                    </div>
+					    </div>
+					    <div class="layui-tab-item ">
+					    <div class="layui-form-item">
+                        <label class="layui-form-label">首页SEO标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="seo_title" placeholder="请输入城市首页SEO关键字" class="layui-input">
+                        </div>
+                   </div>
+                   <div class="layui-form-item">
+                        <label class="layui-form-label">首页SEO关键字</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="seo_keywords" placeholder="请输入首页SEO关键字" class="layui-input">
+                        </div>
+                    </div>
+                   <div class="layui-form-item">
+                        <label class="layui-form-label">首页SEO描述</label>
+                        <div class="layui-input-block">
+                            <textarea name="seo_description" placeholder="请输入首页SEO描述" class="layui-textarea"></textarea>
+                        </div>
+                   </div>
+                     <div class="layui-form-item">
+                        <label class="layui-form-label">分站联系人</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="contact" placeholder="请输入分站联系人" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分站手机号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="mobile" placeholder="请输入分站手机号" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分站电话</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="phone" placeholder="请输入分站电话" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分站传真</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="fax" placeholder="请输入分站传真" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分站邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="email" placeholder="请输入分站邮箱" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分站QQ</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="qq" placeholder="请输入分站QQ" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分站地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="address" placeholder="请输入分站地址" class="layui-input" />
+                        </div>
+                    </div>
+					    </div>
+					  </div>
+					</div>
+					<div class="layui-form-item">
+						 <div class="layui-input-block">
+						    <button class="layui-btn" lay-submit>立即提交</button>
+						    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+						 </div>
+					</div>
+			   </form>
+	  	   </div>
+        </div>
+    </div>
+    {/if}
+    {if([$mod])}
+    <div class="layui-tab layui-tab-brief" lay-filter="tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">城市修改</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item  layui-show">
+	  	  	<form action="{url./admin/City/mod/id/'.[$get.id].'}{$backurl}" method="post" class="layui-form" lay-filter="sort">
+                    <input type="hidden" name="formcheck" value="{$formcheck}">
+		  	     	<div class="layui-tab">
+					  <ul class="layui-tab-title">
+					    <li class="layui-this">基本内容</li>
+					    <li>高级内容</li>
+					  </ul>
+					  <div class="layui-tab-content">
+					    <div class="layui-tab-item layui-show">
+					    <div class="layui-form-item">
+                                    <label class="layui-form-label">上级城市   <span class="layui-text-red">*</span></label>
+                                    <div class="layui-input-block">
+                                        <select name="pid" lay-verify="required">
+                                           <option value="0">顶级</option>
+                                           {foreach $city_select(key,value)}
+                                           <option value="[value->id]" {if($value->id==[$city->pid])}selected="selected"{/if}>[value->title]</option>
+                                           {/foreach}
+                                       </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">城市名称 <span class="layui-text-red">*</span></label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="title" required lay-verify="required" value="{$city->title}" placeholder="请输入城市城市名称" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">城市拼音<span class="layui-text-red">*</span></label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="etitle" required lay-verify="required" value="{$city->etitle}" placeholder="请输入城市英文城市名称" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">参数</label>
+                                    <div class="layui-input-block">
+                                       <input type="checkbox" name="istop" value="1" title="推荐" {if([$city->istop]==1)}checked{/if}>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">状态</label>
+                                    <div class="layui-input-block">
+                                        <input type="radio" name="status" value="1" title="显示" {if([$city->status]==1)}checked="checked"{/if}>
+                                        <input type="radio" name="status" value="0" title="隐藏" {if([$city->status]==0)}checked="checked"{/if}>
+                                    </div>
+                                </div>
+					    </div>
+					    <div class="layui-tab-item ">
+					     <div class="layui-form-item">
+                                    <label class="layui-form-label">首页SEO标题</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="seo_title" placeholder="请输入城市首页SEO关键字" value="{$city->seo_title}" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">首页SEO关键字</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="seo_keywords" placeholder="请输入首页SEO关键字" value="{$city->seo_keywords}" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">首页SEO描述</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="seo_description" placeholder="请输入首页SEO描述" class="layui-textarea">{$city->seo_description}</textarea>
+                                    </div>
+                                </div>
+                     <div class="layui-form-item">
+                                    <label class="layui-form-label">分站联系人</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="contact" placeholder="请输入分站联系人" value="{$city->contact}" class="layui-input" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">分站手机号</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="mobile" placeholder="请输入分站手机号" value="{$city->mobile}" class="layui-input" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">分站电话</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="phone" placeholder="请输入分站电话" value="{$city->phone}" class="layui-input" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">分站传真</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="fax" placeholder="请输入分站传真" value="{$city->fax}" class="layui-input" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">分站邮箱</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="email" placeholder="请输入分站邮箱" value="{$city->email}" class="layui-input" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">分站QQ</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="qq" placeholder="请输入分站QQ" value="{$city->qq}" class="layui-input" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">分站地址</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="address" placeholder="请输入分站地址" value="{$city->address}" class="layui-input" />
+                                    </div>
+                                </div>
+					    </div>
+					  </div>
+					</div>
+					 <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit>立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            {fun=get_btn_back()}
+                        </div>
+                    </div>
+			   </form>
+	  	   </div>
+        </div>
+    </div>
+    {/if}
+</div>
+{include file='common/foot.html'}

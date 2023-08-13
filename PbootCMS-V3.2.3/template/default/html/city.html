@@ -1,0 +1,20 @@
+{include file=comm/head.html}
+{include file=comm/top.html}
+<div class="container pages">
+    {include file=comm/position.html}
+    <h2 class="text-center my-4 fs-sm-28 fs-24">{sort:name}</h2>
+    <div class="content">
+        <div>城市分站页面仅代表本公司的业务覆盖范围，不代表国家行政区划。</div>
+        {pboot:city}
+        <dl>
+            <dt><a href="[city:home]">[city:title]</a></dt>
+            <dd>
+                {pboot:2city pid=[city:id]}
+                <a href="[2city:home]">[2city:title]</a>
+                {/pboot:2city}
+            </dd>
+        </dl>
+        {/pboot:city}
+    </div>
+</div>
+{include file=comm/foot.html}

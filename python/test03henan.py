@@ -5,13 +5,11 @@ from asyncio import sleep
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import re
-
 import logging
 import traceback
 from savePic import savePic
 from SavemysqlAndQurey import  getMaxCountNumFromContent,saveContent
-
+import random
 def runMain():
     # 引入日志
 
@@ -23,6 +21,7 @@ def runMain():
 
 
 def getContent():
+    time.sleep(random.randint(5, 200))
     # 创建浏览器对象
     Browerdriver = webdriver.Edge()
     Browerdriver.get("http://jyt.henan.gov.cn/jydt/")
@@ -77,7 +76,7 @@ def getContent():
             finally:
                 Browerdriver.close()
                 Browerdriver.switch_to.window(handle_main)
-                time.sleep(1)  # 暂停5秒输出下一指令
+                time.sleep(random.randint(5, 200))
                 print("12")
                 # 退出try语句块总会执行的程序
 

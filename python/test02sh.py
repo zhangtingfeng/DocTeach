@@ -5,13 +5,11 @@ from asyncio import sleep
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from goto import with_goto
-import re
 import pymysql
 import hashlib
 import logging
 import traceback
-
+import random
 
 def runMain():
     # 引入日志
@@ -34,6 +32,7 @@ def getMD5(stringinput):
 
 def getContent():
     #创建浏览器对象
+    time.sleep(random.randint(5, 200))
     Browerdriver = webdriver.Edge()
     Browerdriver.get("http://edu.sh.gov.cn/xwzx_bsxw/index.html")
     #打印页面标题“百度一下你就知道”
@@ -106,7 +105,7 @@ def getContent():
             except: 
                 print("11")    
             finally:
-                time.sleep(2)    #暂停5秒输出下一指令
+                time.sleep(random.randint(5, 200))    #暂停5秒输出下一指令
                 Browerdriver.back()
                 print("12")    
                #退出try语句块总会执行的程序 

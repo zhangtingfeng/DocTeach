@@ -6,7 +6,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import re
-
+import random
 import logging
 import traceback
 from savePic import savePic
@@ -23,9 +23,10 @@ def runMain():
 
 
 def getContent():
+    time.sleep(random.randint(5, 6))
     # 创建浏览器对象
     Browerdriver = webdriver.Edge()
-    Browerdriver.get("test04ZheJiang.py")
+    Browerdriver.get("http://jyt.jiangsu.gov.cn/col/col57807/index.html")
     # 打印页面标题“百度一下你就知道”
     print(Browerdriver.title)
 
@@ -35,7 +36,7 @@ def getContent():
 
     crulink = 0
     while True:
-        elementid = Browerdriver.find_element(By.ID, '4735063')
+        elementid = Browerdriver.find_element(By.ID, '277770')
         #//elementul =elementid.find_element(By.XPATH, '//ul')  # element01Content=Browerdriver.find_element(By.XPATH,'//div[@class="moe-detail-box"]')
         links = elementid.find_elements(By.CSS_SELECTOR, 'a')
         handle_main = Browerdriver.current_window_handle
@@ -44,6 +45,7 @@ def getContent():
             break
 
         for link in links:
+            time.sleep(random.randint(5, 10))  # 暂停5秒输出下一指令
             crulink = crulink + 1
             link.click()
 
@@ -56,17 +58,18 @@ def getContent():
             print(Browerdriver.title)
 
             try:
+                time.sleep(random.randint(15, 100))  # 暂停5秒输出下一指令
+                Out_Comfrom = "江苏教育"
 
-                Out_Comfrom = "浙江教育"
-
-                Out_title = Browerdriver.title;
+                Out_titleR =Browerdriver.find_element(By.XPATH,'//div[@class="sp_title"]').get_attribute('innerHTML')  # Browerdriver.title;
+                Out_title=re.findall(r"begin-->(.+?)<!--", Out_titleR)[0]  #
                 element02Content = Browerdriver.find_element(By.ID, 'zoom')
                 sourceContent = element02Content.get_attribute('innerHTML')
                 img_elements = element02Content.find_elements(by=By.TAG_NAME, value='img')
                 maxCount=getMaxCountNumFromContent()+1
-                savePic(img_elements, "Pic33ZheJiang",maxCount, Browerdriver)
+                savePic(img_elements, "Pic32Jiangsu",maxCount, Browerdriver)
                 Out_Content = element02Content.get_attribute('innerHTML')
-                saveContent(Out_title, Out_Content, Out_Comfrom,sourceContent,33)
+                saveContent(Out_title, Out_Content, Out_Comfrom,sourceContent,32)
 
             except Exception as e:
                 logging.error("主程序抛错：")
@@ -78,8 +81,8 @@ def getContent():
             finally:
                 Browerdriver.close()
                 Browerdriver.switch_to.window(handle_main)
-                time.sleep(1)  # 暂停5秒输出下一指令
                 print("12")
+                time.sleep(random.randint(50, 200))  # 暂停5秒输出下一指令
                 # 退出try语句块总会执行的程序
 
         element = Browerdriver.find_element(By.ID, 'page')

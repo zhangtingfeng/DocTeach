@@ -36,6 +36,8 @@ def getMaxCountNumFromContent():
     cursor.execute(SelctCountsql)
     # 获取查询结果
     myresult = cursor.fetchone()[0]
+    if (myresult==None):
+        myresult=-1
     cursor.close()
     dbconn.close()
     return myresult

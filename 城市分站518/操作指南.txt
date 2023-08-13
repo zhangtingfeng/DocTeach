@@ -1,0 +1,14 @@
+﻿1、备份网站所有文件
+2、替换apps、config、core三个文件夹
+3、navicat premium15破解版下载（数据库编辑软件）
+4、添加数据库文件并导入ay_content_city.sql
+5、修改ay_content_sort数据表，增加 def1   def2   def3字段
+6、修改ay_content数据表，增加picstitle字段 至此数据库修改完成，上传替换数据库
+7、进入后台重新修改下，全局配置  配置参数  系统授权码
+8、后台增加城市管理菜单
+浏览器中输入 网址/admin.php?p=menu
+url地址为： /admin/ContentCity/index
+9、修改模板，需要显示城市的地方加入{city}标签
+10、后台增加 城市分站栏目，属性为专题  模板为city.html
+
+注意使用此插件后不要升级网站，否则插件失效。

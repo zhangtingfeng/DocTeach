@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset=utf-8>
+        <link rel=icon href=/favicon.ico>
+        <link rel="shortcut icon" href=/favicon.ico>
+        <meta http-equiv=X-UA-Compatible content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+         <title>
+         城市分站_{pboot:pagetitle}
+        </title>
+ 
+        <style>
+		*{padding:0;margin:0}
+        .citylist{    width: 1200px;
+    margin: 0 auto; padding:50px 0 100px;  }
+        .citylist .tips{ color:#999; text-align: center; margin-bottom: 20px; }
+        .citylist dl{ margin-bottom: 20px; position: relative; padding-left:90px; min-height: 30px; }
+        .citylist dl dt{ position: absolute; left: 0; background:#0579f2; min-width: 80px; color:#fff; border-radius: 4px; }
+        .citylist dl dt a{ color:#fff; display: block; text-align: center; height: 30px; line-height: 30px;text-decoration: none; }
+        .citylist dl dd a{text-decoration: none; display: inline-block; color:#666; height: 30px; line-height: 30px; padding: 0 5px; }
+        .citylist dl dd a:hover{ color:#0579f2; text-decoration: none;}   
+		@media(max-width:789px){
+   .citylist{width:auto;margin:0 20px;}
+   .citylist dl{font-size:14px}
+   .citylist dl dd {margin-left: 0;}
+}
+    </style>
+    </head>
+    
+    <body>
+ 
+ 
+            <div class="citylist">
+			<div class="tips">城市分站页面仅代表本公司的业务覆盖范围，不代表国家行政区划。</div>
+            <dl><dt><a href="{pboot:sitedomain}/">总站</a></dt></dl>
+			 {pboot:city}  
+             
+			<dl>
+                                        <dt><a href= "[city:link]">[city:name]</a></dt>
+                                        <dd>
+                                            
+                                          {pboot:2city parent=[city:scode]}
+
+    <a href= "[2city:link]" >[2city:name]</a>
+    
+    {pboot:3city parent=[2city:scode]}
+<a href= "[3city:link]" style="font-size:10px">[3city:name]</a>
+{/pboot:3city}
+
+  {/pboot:2city}
+                                        </dd>
+                                    </dl>
+			
+			{/pboot:city}
+			
+ 
+               </div>   
+ 
+    </body>
+
+</html>
