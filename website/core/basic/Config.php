@@ -145,6 +145,12 @@ class Config
             $config = require RUN_PATH . '/config/' . md5('area') . '.php';
             $configs = mult_array_merge($configs, $config);
         }
+
+    //载入分站配置缓存
+        if (file_exists(RUN_PATH . '/config/' . md5('city') . '.php')) {
+            $config = require RUN_PATH . '/config/' . md5('city') . '.php';
+            $configs = mult_array_merge($configs, $config);
+        }
         
         // 清理缓冲区，避免配置文件出现Bom时影响显示
         @ob_clean();

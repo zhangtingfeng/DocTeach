@@ -205,6 +205,68 @@ function cache_config($refresh = false)
         $lgs['lgs'] = $map;
         Config::set(md5('area'), $lgs, false, true);
     }
+
+   // 分站缓存
+    $city_cache = RUN_PATH . '/config/' . md5('city') . '.php';
+    if ( file_exists(ROOT_PATH . '/data/city.lock') && ( ! file_exists($city_cache) || $refresh ) ) {
+        $model = model('admin.system.City');
+        $city = $model->getAllList(); // 获取城市分站
+        $map = array();
+        foreach ($city as $key => $value) {
+            $map[$value['etitle']] = $value;
+        }
+        $citys['citys'] = $map;
+        Config::set(md5('city'), $citys, false, true);
+    }
+}
+
+/**
+ * 生成分站URL分站参数
+ * @param string $etitle 分站英文名称
+ * @param string $isurl 分站绑定链接
+ * @return string $path 追加URL参数
+ */
+function create_city_url( $etitle, $isurl, $path=false ){
+    $main_domain = Config::get('main_domain');  //主域名
+    $wildcard = Config::get('wildcard');    //泛域名支持
+    $city_suffix = Config::get('city_suffix')?'.html':'/';   //分站后缀
+    $http = 'http://';
+    if( is_https() ){
+        $http = 'https://';
+    }
+    if( $wildcard ){
+        if( $main_domain=='' ){
+            error('请到后台全局配置->参数配置->基本配置中填入「网站主域名」');
+        }
+        //生成泛域名
+        $domain = create_domain($main_domain,$etitle);
+        if( $path ){
+            $url = $http . $domain.'/'.PATH;
+        }
+        $url = $http . $domain;
+    }else{
+        if( $isurl ){
+            if( $path ){
+                $url = $http . $isurl.'/'.PATH;
+            }else{
+                $url = $http . $isurl;
+            }
+        }else{
+            if( $path ){
+                $url = ($main_domain ? $http . $main_domain : '') . '/'.$etitle.'/'.PATH;
+            }else{
+                $url = ($main_domain ? $http . $main_domain : '') . '/'.$etitle.$city_suffix;
+            }
+        }
+    }
+    return $url;
+}
+
+// 生成新域名 @cms88
+function create_domain( $domain, $etitle ){
+    $domain_first = explode('.', $domain)[0];
+    $new_domain = str_replace($domain_first, $etitle, $domain);
+    return $new_domain;
 }
 
 // 获取默认语言

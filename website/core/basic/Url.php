@@ -149,6 +149,13 @@ class Url
                         error('地址模式设置错误,请登录后台重新设置！');
                 }
             }
+            //优化分站超链接 @cms88
+            if( ISURL!==TRUE && strpos($link,'http') == false && cookie('city')!=='' && cookie('city')!==null ){
+                if( $path == '' && $suffix === $url_rule_suffix ){
+                    $link = $suffix;
+                }
+                $link = '/'.cookie('city').$link;
+            }
             self::$urls[md5($path . $suffix . $qs)] = $link;
         }
         return self::$urls[md5($path . $suffix . $qs)];

@@ -1,0 +1,46 @@
+{include file=comm/head.html}
+{include file=comm/top.html}
+<div class="container pages">
+    {include file=comm/position.html}
+    <h2 class="text-center my-4 fs-sm-28 fs-24">{sort:name}</h2>
+    <div class="content">
+        <div>城市分站页面仅代表本公司的业务覆盖范围，不代表国家行政区划。{php}
+  
+    
+            {/php}
+
+        </div>
+        {pboot:city istop=1}
+        <dl>
+            <dt><a href="[city:home]" class="sheng">[city:title]</a></dt>
+            <dd class="shi">
+                {pboot:2city pid=[city:id]}
+                <a href="[2city:home]" class="eachshi">[2city:title]</a>
+                {/pboot:2city}
+            </dd>
+        </dl>
+        {/pboot:city}
+    </div>
+</div>
+
+
+<style type="text/css">
+    .sheng {
+        color: blue;
+        font-weight: 700;
+        font-size: large;
+    }
+
+    .shi {
+        padding-left: 1cm;
+        font-weight: 300;
+        font-size: medium;
+    }
+
+    .eachshi {
+        padding-left: 0.3cm;
+
+    }
+</style>
+
+{include file=comm/foot.html}

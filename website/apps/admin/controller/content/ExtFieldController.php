@@ -44,7 +44,7 @@ class ExtFieldController extends Controller
         $this->display('content/extfield.html');
     }
 
-    // 扩展字段增加
+    ##全局配置-模型字段-扩展字段新增
     public function add()
     {
         if ($_POST) {

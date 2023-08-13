@@ -175,6 +175,22 @@ class ParserModel extends Model
         return $data;
     }
 
+//城市分站目录树
+    public function getCityListTree($where=''){
+        $where = 'status=1';
+        $list = parent::table('ay_city')->order('sorting asc')->where($where)->select(1);
+        foreach ($list as $key => $value) {
+            if ($value['pid']) {
+                $result[$value['pid']]['son'][] = $value; // 记录到关系树
+            } else {
+                $result[$value['id']] = $value;
+                $data['top'][] = $value; // 记录顶级菜单
+            }
+        }
+        $data['tree'] = $result;
+        return $data;
+    }
+
     // 获取分类名称
     public function getSortName($scode)
     {
@@ -212,7 +228,7 @@ class ParserModel extends Model
         }
     }
 
-/*     // 分类子类集
+    // 分类子类集
     private function getSubScodes($scode)
     {
         if (! $scode) {
@@ -226,46 +242,8 @@ class ParserModel extends Model
             }
         }
         return $this->scodes;
-    } */
-	// 分类子类集
-    public function getSubScodes($scode)
-    {
-        if (! $scode) {
-            return;
-        }
-        $this->scodes[] = $scode;
-        $subs = parent::table('ay_content_sort')->where("pcode='$scode'")
-            ->where("outlink=''")
-            ->column('scode');
-        if ($subs) {
-            foreach ($subs as $value) {
-                $this->getSubScodes($value);
-            }
-        }
-        return $this->scodes;
     }
-	// 清除静态缓存时，获取全部栏目编码
-    public function getScodes($type)
-    {
-        $join = array(
-            'ay_model b',
-            'a.mcode=b.mcode',
-            'LEFT'
-        );
-        // 不包括外链
-        return parent::table('ay_content_sort a')->join($join)
-            ->in('b.type', $type)
-            ->where("outlink=''")
-            ->column('scode');
-    }
-	// 生成静态时，获取栏目全部内容ID
-    public function getContentIds($scodes, $where = array())
-    {
-        return parent::table('ay_content')->in('scode', $scodes)
-            ->where("outlink=''")
-            ->where($where)
-            ->column('id');
-    }
+
     // 获取栏目清单
     private function getSortList()
     {

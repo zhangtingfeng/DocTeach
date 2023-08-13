@@ -9,6 +9,7 @@
 namespace app\home\controller;
 
 use core\basic\Controller;
+use core\basic\Config;
 
 class ExtLabelController
 {
@@ -23,6 +24,9 @@ class ExtLabelController
         
         // 执行个人自定义标签函数
         $this->test();
+
+        // 城市分站标签
+        $this->citytag();
         
         // 返回数据
         return $this->content;
@@ -33,4 +37,20 @@ class ExtLabelController
     {
         $this->content = str_replace('{pboot:userip}', get_user_ip(), $this->content);
     }
+
+    // 城市分站标签
+    private function citytag(){
+        $cur_city = cookie('city');
+        if( !! $cur_city ){
+            $citys = Config::get('citys');
+            $city = $citys[$cur_city];
+            $this->content = str_replace('{xx}', $city['title'], $this->content);
+            $this->content = str_replace('{citylink}', $city['etitle'], $this->content);
+        }else{
+            $this->content = str_replace('{xx}', '', $this->content);
+            $this->content = str_replace('{citylink}', '', $this->content);
+        }
+    }
+
+
 }

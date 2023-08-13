@@ -51,19 +51,12 @@ class ParserController extends Controller
         $content = str_replace('{pboot:pagekeywords}', '{pboot:sitekeywords}', $content);
         $content = str_replace('{pboot:pagedescription}', '{pboot:sitedescription}', $content);
         $content = str_replace('{pboot:keyword}', get('keyword', 'vars'), $content); // 当前搜索的关键字
-                                                                                     
-        // 解析个人扩展标签，升级不覆盖
-        if (file_exists(APP_PATH . '/home/controller/ExtLabelController.php')) {
-            if (class_exists('app\home\controller\ExtLabelController')) {
-                $extlabel = new ExtLabelController();
-                $content = $extlabel->run($content);
-            }
-        }
-        
+
         $content = $this->parserSiteLabel($content); // 站点标签
         $content = $this->parserCompanyLabel($content); // 公司标签
         $content = $this->parserMemberLabel($content); // 会员标签
         $content = $this->parserNavLabel($content); // 分类列表
+        $content = $this->parserCityListLabel($content); // 解析城市分站标签
         $content = $this->parserSelectAllLabel($content); // CMS筛选全部标签解析
         $content = $this->parserSelectLabel($content); // CMS筛选标签解析
         $content = $this->parserSpecifySortLabel($content); // 指定分类
@@ -77,7 +70,7 @@ class ParserController extends Controller
         $content = $this->parserMessageLabel($content); // 留言板
         $content = $this->parserFormLabel($content); // 自定义表单
         $content = $this->parserSubmitFormLabel($content); // 自定义表单提交
-        //$content = $this->parserSqlListLabel($content); // 自定义SQL输出(V3.2.4开始已废弃)
+        $content = $this->parserSqlListLabel($content); // 自定义SQL输出
         
         $content = $this->parserQrcodeLabel($content); // 二维码生成
         $content = $this->parserPageLabel($content); // CMS分页标签解析(需置后)
@@ -85,6 +78,15 @@ class ParserController extends Controller
         $content = $this->parserLoopLabel($content); // LOOP语句(需置后，不可放到if前面，否则有安全风险)
         $content = $this->restorePreLabel($content); // 还原不需要解析的内容
         $content = $this->parserReplaceKeyword($content); // 页面关键词替换
+
+        // 解析个人扩展标签，升级不覆盖
+        if (file_exists(APP_PATH . '/home/controller/ExtLabelController.php')) {
+            if (class_exists('app\home\controller\ExtLabelController')) {
+                $extlabel = new ExtLabelController();
+                $content = $extlabel->run($content);
+            }
+        }
+
         return $content;
     }
 
@@ -188,7 +190,11 @@ class ParserController extends Controller
                 $spider->index();
             }
         }
-        
+       // 生成分站首页
+        $city_suffix = $this->config('city_suffix')?true:false;   //分站后缀
+        $content = str_replace('{zong}', Url::home('home/Index/', $city_suffix), $content); // {zong}
+        $content = str_replace('{iscity}', cookie('city') ? 1 : 0, $content); // 用来判断当前是否是分站
+
         return $content;
     }
 
@@ -271,6 +277,11 @@ class ParserController extends Controller
         if (preg_match_all($pattern, $content, $matches)) {
             $data = $this->model->getCompany();
             $count = count($matches[0]);
+            
+           //
+            $city = cookie('city');
+            $city_info = $this->config('citys')[$city];
+
             for ($i = 0; $i < $count; $i ++) {
                 if (! $data) { // 无数据时直接替换为空
                     $content = str_replace($matches[0][$i], '', $content);
@@ -289,6 +300,16 @@ class ParserController extends Controller
                             $content = str_replace($matches[0][$i], '', $content);
                         }
                         break;
+                    case 'contact':
+                    case 'mobile':
+                    case 'phone':
+                    case 'fax':
+                    case 'email':
+                    case 'qq':
+                    case 'address':
+                        if( $city_info[$matches[1][$i]] ){
+                            $data->{$matches[1][$i]} = $city_info[$matches[1][$i]];
+                        }
                     default:
                         if (isset($data->{$matches[1][$i]})) {
                             $content = str_replace($matches[0][$i], $this->adjustLabelData($params, $data->{$matches[1][$i]}), $content);
@@ -576,7 +597,7 @@ class ParserController extends Controller
                     $indextext = '首页';
                 }
                 
-                $out_html = '<a href="' . SITE_INDEX_DIR . '/">' . $indextext . '</a>';
+                $out_html = '<a href="' . Url::home('home/Index') . '">' . $indextext . '</a>';
                 if ($page && $scode == 0) {
                     $out_html .= $separator . '<a href="' . $link . '">' . $page . '</a>';
                 } else {
@@ -2715,92 +2736,91 @@ class ParserController extends Controller
         return $content;
     }
 
-    // 解析自定义SQL循环 V3.2.4 build20230304开始废弃(安全性修复)
-
-//    public function parserSqlListLabel($content)
-//    {
-//        $pattern = '/\{pboot:sql(\s+[^}]+)?\}([\s\S]*?)\{\/pboot:sql\}/';
-//        $pattern2 = '/\[sql:([\w]+)(\s+[^]]+)?\]/';
-//
-//        if (preg_match_all($pattern, $content, $matches)) {
-//
-//            $count = count($matches[0]);
-//            for ($i = 0; $i < $count; $i ++) {
-//                // 获取调节参数
-//                $params = $this->parserParam($matches[1][$i]);
-//
-//                if (! self::checkLabelLevel($params)) {
-//                    $content = str_replace($matches[0][$i], '', $content);
-//                    continue;
-//                }
-//
-//                $num = 1000; // 最大读取1000条
-//                $sql = '';
-//
-//                foreach ($params as $key => $value) {
-//                    switch ($key) {
-//                        case 'num':
-//                            $num = $value;
-//                            break;
-//                        case 'sql':
-//                            $sql = $value;
-//                            break;
-//                    }
-//                }
-//
-//                // 特殊表不允许输出
-//                if (preg_match('/ay_user|ay_member/i', $sql)) {
-//                    $content = str_replace($matches[0][$i], '', $content);
-//                    continue;
-//                }
-//
-//                // 判断是否有条数限制
-//                if ($num && ! preg_match('/limit/i', $sql)) {
-//                    $sql .= " limit " . $num;
-//                }
-//
-//                // 读取数据
-//                if (! $data = $this->model->all($sql)) {
-//                    $content = str_replace($matches[0][$i], '', $content);
-//                    continue;
-//                }
-//
-//                // 匹配到内部标签
-//                if (preg_match_all($pattern2, $matches[2][$i], $matches2)) {
-//                    $count2 = count($matches2[0]); // 循环内的内容标签数量
-//                } else {
-//                    $count2 = 0;
-//                }
-//
-//                $out_html = '';
-//
-//                $pagenum = defined('PAGE') ? PAGE : 1;
-//                $key = ($pagenum - 1) * $num + 1;
-//                foreach ($data as $value) { // 按查询数据条数循环
-//                    $one_html = $matches[2][$i];
-//                    for ($j = 0; $j < $count2; $j ++) { // 循环替换数据
-//                        $params = $this->parserParam($matches2[2][$j]);
-//                        switch ($matches2[1][$j]) {
-//                            case 'n':
-//                                $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $key) - 1, $one_html);
-//                                break;
-//                            case 'i':
-//                                $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $key), $one_html);
-//                                break;
-//                            default:
-//                                if (isset($value->{$matches2[1][$j]})) {
-//                                    $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $value->{$matches2[1][$j]}), $one_html);
-//                                }
-//                        }
-//                    }
-//                    $key ++;
-//                    $out_html .= $one_html;
-//                }
-//                $content = str_replace($matches[0][$i], $out_html, $content);
-//            }
-//        }
-//        return $content;
-//    }
+    // 解析自定义SQL循环
+    public function parserSqlListLabel($content)
+    {
+        $pattern = '/\{pboot:sql(\s+[^}]+)?\}([\s\S]*?)\{\/pboot:sql\}/';
+        $pattern2 = '/\[sql:([\w]+)(\s+[^]]+)?\]/';
+        
+        if (preg_match_all($pattern, $content, $matches)) {
+            
+            $count = count($matches[0]);
+            for ($i = 0; $i < $count; $i ++) {
+                // 获取调节参数
+                $params = $this->parserParam($matches[1][$i]);
+                
+                if (! self::checkLabelLevel($params)) {
+                    $content = str_replace($matches[0][$i], '', $content);
+                    continue;
+                }
+                
+                $num = 1000; // 最大读取1000条
+                $sql = '';
+                
+                foreach ($params as $key => $value) {
+                    switch ($key) {
+                        case 'num':
+                            $num = $value;
+                            break;
+                        case 'sql':
+                            $sql = $value;
+                            break;
+                    }
+                }
+                
+                // 特殊表不允许输出
+                if (preg_match('/ay_user|ay_member/i', $sql)) {
+                    $content = str_replace($matches[0][$i], '', $content);
+                    continue;
+                }
+                
+                // 判断是否有条数限制
+                if ($num && ! preg_match('/limit/i', $sql)) {
+                    $sql .= " limit " . $num;
+                }
+                
+                // 读取数据
+                if (! $data = $this->model->all($sql)) {
+                    $content = str_replace($matches[0][$i], '', $content);
+                    continue;
+                }
+                
+                // 匹配到内部标签
+                if (preg_match_all($pattern2, $matches[2][$i], $matches2)) {
+                    $count2 = count($matches2[0]); // 循环内的内容标签数量
+                } else {
+                    $count2 = 0;
+                }
+                
+                $out_html = '';
+                
+                $pagenum = defined('PAGE') ? PAGE : 1;
+                $key = ($pagenum - 1) * $num + 1;
+                foreach ($data as $value) { // 按查询数据条数循环
+                    $one_html = $matches[2][$i];
+                    for ($j = 0; $j < $count2; $j ++) { // 循环替换数据
+                        $params = $this->parserParam($matches2[2][$j]);
+                        switch ($matches2[1][$j]) {
+                            case 'n':
+                                $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $key) - 1, $one_html);
+                                break;
+                            case 'i':
+                                $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $key), $one_html);
+                                break;
+                            default:
+                                if (isset($value->{$matches2[1][$j]})) {
+                                    $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $value->{$matches2[1][$j]}), $one_html);
+                                }
+                        }
+                    }
+                    $key ++;
+                    $out_html .= $one_html;
+                }
+                $content = str_replace($matches[0][$i], $out_html, $content);
+            }
+        }
+        return $content;
+    }
 
     // 解析二维码生成标签
     public function parserQrcodeLabel($content)
@@ -3899,6 +3919,153 @@ class ParserController extends Controller
         }
         return $content;
     }
+
+//解析城市列表标签
+    // 解析分站列表标签
+    public function parserCityListLabel($content)
+    {
+        $pattern = '/\{pboot:city(\s+[^}]+)?\}([\s\S]*?)\{\/pboot:city\}/';
+        $pattern2 = '/\[city:([\w]+)(\s+[^]]+)?\]/';
+        $pattern3 = '/pboot:([0-9])+city/';
+        if (preg_match_all($pattern, $content, $matches)) {
+            $data = $this->model->getCityListTree();
+            $count = count($matches[0]);
+            for ($i = 0; $i < $count; $i ++) {
+                // 无数据时直接替换整体标签为空
+                if (! $data['tree']) {
+                    $content = str_replace($matches[0][$i], '', $content);
+                    continue;
+                }
+                // 获取调节参数
+                $params = $this->parserParam($matches[1][$i]);
+
+                $pid = 0;
+                $num = 0;
+                $istop = 0;
+                $islevel = 0;
+                foreach ($params as $key => $value) {
+                    switch ($key) {
+                        case 'pid':
+                            $pid = $value;
+                            break;
+                        case 'num':
+                            $num = $value;
+                            break;
+                        case 'istop':
+                            $istop = $value;
+                            break;
+                        case 'islevel':
+                            $islevel = $value;
+                            break;
+                    }
+                }
+
+                $out_data = array();
+                // 置顶
+                if( $istop ){
+                    foreach( $data['tree'] as $row ){
+                        if( $row['istop']==1 ){
+                            array_push($out_data,$row);
+                        }
+                        foreach( $row['son'] as $son ){
+                            if( $son['istop']==1 ){
+                                array_push($out_data,$son);
+                            }
+                        }
+                    }
+                }elseif( $islevel ){    //显示层级
+                    $citys = $this->config('citys');
+                    $pid = 0;
+                    if( cookie('city')!=='' ){
+                        $cur_city = $citys[cookie('city')];
+                        if( $cur_city['pid'] == 0 ){
+                            $pid = $cur_city['id'];
+                        }else{
+                            $pid = $cur_city['pid'];
+                        }
+                    }
+                    foreach( $data['tree'] as $row ){
+                        if( $row['id']==$pid ){
+                            foreach( $row['son'] as $son ){
+                                array_push($out_data,$son);
+                            }
+                        }
+                    }
+                }else{
+                    if ($pid) { // 非顶级栏目起始,调用子栏目
+                        $parent_arr = explode(',', $pid);
+                        foreach ($parent_arr as $vp) {
+                            if (isset($data['tree'][trim($vp)]['son'])) {
+                                $out_data = array_merge($out_data, $data['tree'][trim($vp)]['son']);
+                            }
+                        }
+                    } else { // 顶级栏目起始
+                        $out_data = $data['top'];
+                    }
+                }
+                // 读取指定数量
+                if ($num) {
+                    $out_data = array_slice($out_data, 0, $num);
+                }
+                
+                // 匹配到内部标签
+                if (preg_match_all($pattern2, $matches[2][$i], $matches2)) {
+                    $count2 = count($matches2[0]); // 循环内的内容标签数量
+                } else {
+                    $count2 = 0;
+                }
+                $out_html = '';
+                $key = 1;
+                foreach ($out_data as $value) { // 按查询的数据条数循环
+                    $one_html = $matches[2][$i];
+                    if ($count2) {
+                        for ($j = 0; $j < $count2; $j ++) { // 循环替换数据
+                            $params = $this->parserParam($matches2[2][$j]);
+                            switch ($matches2[1][$j]) {
+                                case 'n':
+                                    $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $key) - 1, $one_html);
+                                    break;
+                                case 'i':
+                                    $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $key), $one_html);
+                                    break;
+                                case 'home':
+                                    $one_html = str_replace($matches2[0][$j], create_city_url($value['etitle'], $value['isurl'], false), $one_html);
+                                    break;
+                                case 'link':
+                                    $one_html = str_replace($matches2[0][$j], create_city_url($value['etitle'], $value['isurl'], true), $one_html);
+                                    break;
+                                case 'soncount':
+                                    if (isset($data['tree'][$value['id']]['son'])) {
+                                        $one_html = str_replace($matches2[0][$j], count($data['tree'][$value['id']]['son']), $one_html);
+                                    } else {
+                                        $one_html = str_replace($matches2[0][$j], 0, $one_html);
+                                    }
+                                    break;
+                                default:
+                                    if (isset($value[$matches2[1][$j]])) {
+                                        $one_html = str_replace($matches2[0][$j], $this->adjustLabelData($params, $value[$matches2[1][$j]]), $one_html);
+                                    }
+                            }
+                        }
+                    }
+                    $key ++;
+                    $out_html .= $one_html;
+                }
+                
+                // 无限极嵌套解析
+                if (preg_match($pattern3, $out_html, $matches3)) {
+                    $out_html = str_replace('pboot:' . $matches3[1] . 'city', 'pboot:city', $out_html);
+                    $out_html = str_replace('[' . $matches3[1] . 'city:', '[city:', $out_html);
+                    $out_html = $this->parserCityListLabel($out_html);
+                }
+                
+                // 执行内容替换
+                $content = str_replace($matches[0][$i], $out_html, $content);
+            }
+        }
+        return $content;
+    }
+    // end 城市分站解析
 
     // 替换页面内容关键词
     protected function parserReplaceKeyword($content)

@@ -34,17 +34,12 @@ class IndexController extends Controller
     {
         // 地址类型
         $url_rule_type = $this->config('url_rule_type') ?: 3;
-
-        if (P) { // 采用pathinfo模式及p参数伪静态模式
-            if ($url_rule_type == 2) { // 禁止伪静态时带index.php 和动态地址访问
-                if(stripos(URL, 'index.php') !== false){
-                    _404('您访问的内容不存在，请核对后重试！');
-                }
-                if(stripos(URL,'?') !== false && stripos(URL,'/?tag=') == false && stripos(URL,'/?page=') == false && stripos(URL,'/?ext_') == false){
-                    _404('您访问的内容不存在，请核对后重试！');
-                }
+        
+        if (PATH) { // 采用pathinfo模式及p参数伪静态模式
+            if ($url_rule_type == 2 && stripos(URL, $_SERVER['SCRIPT_NAME']) !== false) { // 禁止伪静态时带index.php访问
+                _404('您访问的内容不存在，请核对后重试！');
             }
-            $path = P;
+            $path = PATH;
         } elseif ($url_rule_type == 3 && isset($_SERVER["QUERY_STRING"]) && $qs = $_SERVER["QUERY_STRING"]) { // 采用简短传参模式
             parse_str($qs, $output);
             unset($output['page']); // 去除分页
@@ -74,7 +69,7 @@ class IndexController extends Controller
         $path_arr = $path ? explode('/', $path) : array();
         
         // 开始路由
-        if (isset($path_arr) && count($path_arr) > 0 && preg_match('/^[\w\-\/]+$/', $path)) {
+        if (isset($path_arr) && count($path_arr) > 0 && ( in_array('tag',$path_arr) || preg_match('/^[\w\-\/]+$/', $path)) ) {
             switch (strtolower($path_arr[0])) {
                 case 'search':
                 case 'keyword':
@@ -231,7 +226,18 @@ class IndexController extends Controller
     {
         $content = parent::parser($this->htmldir . 'index.html'); // 框架标签解析
         $content = $this->parser->parserBefore($content); // CMS公共标签前置解析
-        $content = str_replace('{pboot:pagetitle}', $this->config('index_title') ?: '{pboot:sitetitle}-{pboot:sitesubtitle}', $content);
+
+        $cur_city = cookie('city');
+        if( !! $cur_city ){ //如果是分站
+            $citys = Config::get('citys');
+            $city = $citys[$cur_city];
+            $content = str_replace('{pboot:pagetitle}', $city['seo_title']?:($this->config('index_title') ?: '{pboot:sitetitle}-{pboot:sitesubtitle}'), $content);
+            $content = str_replace('{pboot:pagekeywords}', $city['seo_keywords']?:'{pboot:sitekeywords}', $content);
+            $content = str_replace('{pboot:pagedescription}', $city['seo_description']?:'{pboot:sitedescription}', $content);
+        }else{
+            $content = str_replace('{pboot:pagetitle}', $this->config('index_title') ?: '{pboot:sitetitle}-{pboot:sitesubtitle}', $content);
+        }
+        
         $content = $this->parser->parserPositionLabel($content, - 1, '首页', SITE_INDEX_DIR . '/'); // CMS当前位置标签解析
         $content = $this->parser->parserSpecialPageSortLabel($content, 0, '', SITE_INDEX_DIR . '/'); // 解析分类标签
         $content = $this->parser->parserAfter($content); // CMS公共标签后置解析
@@ -383,10 +389,6 @@ class IndexController extends Controller
      * @param $isSecSiteDir 是否为二级目录 boolean
      * */
     private function urlJump($type, $isSecSiteDir){
-        //首页开启了分页直接跳转
-        if(strpos($_SERVER['REQUEST_URI'],'/?page=') === 0){
-            $this->getIndexPage();
-        }
         $http = is_https() ? 'https://' : 'http://';
         $matches1 = '';
         switch ($type){
@@ -414,7 +416,7 @@ class IndexController extends Controller
                         $preg2 = '/^\/$/';
                     }
                 } else {
-                    $preg2 = '/^\//';
+                    $preg2 = '/^\/.*/';
                 }
                 preg_match($preg2,$_SERVER['REQUEST_URI'],$matches1);
                 break;
@@ -433,18 +435,10 @@ class IndexController extends Controller
                 preg_match($preg3,$_SERVER['REQUEST_URI'],$matches1);
                 break;
         }
-//        if(strpos($matches1[0],'/?page=') !== 0 || $matches1[0]){
-//            $this->getIndexPage();
-//        }
-//        if(strpos($_SERVER['REQUEST_URI'],'?page') !== 0){
-//            $this->getIndexPage();
-//        }
         if($matches1[0]){
             if($_SERVER['REQUEST_URI'] == $matches1[0]){
                 $this->getIndexPage();
-            } elseif(strpos($matches1[0],'/?page=') !== false) {
-                $this->getIndexPage();
-            }else{
+            } else {
                 //读取后台首页404访问配置
                 if($this->config('url_index_404') == 1){
                     _404('您访问的页面不存在，请核对后重试！');
@@ -452,7 +446,11 @@ class IndexController extends Controller
                 header("Location: " . $http . $_SERVER['HTTP_HOST'] . $matches1[0], true, 301);
             }
         } else {
-            _404('您访问的页面不存在，请核对后重试！');
+            if( file_exists(ROOT_PATH . '/data/city.lock') ){
+                $this->getIndexPage();
+            }else{
+                _404('您访问的页面不存在，请核对后重试！');
+            }
         }
     }
 }

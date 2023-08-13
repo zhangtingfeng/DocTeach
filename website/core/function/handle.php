@@ -384,7 +384,9 @@ function escape_string($string)
             $string->$key = escape_string($value);
         }
     } else { // 字符串处理
+        ## 防止跨站脚本攻击 (XSS)
         $string = htmlspecialchars(trim($string), ENT_QUOTES, 'UTF-8');
+        ## 防止SQL注入攻击
         $string = addslashes($string);
     }
     return $string;

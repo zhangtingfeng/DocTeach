@@ -82,6 +82,66 @@ class HomeController extends Controller
             }
         }
         
+        //===检测城市分站====
+        $citys = Config::get('citys');
+        $domain = get_http_host();
+        $wildcard = $this->config('wildcard');
+        //如果开启泛域名支持
+        if( $wildcard ){
+            $main_domain = $this->config('main_domain');
+            if( $main_domain=='' ){
+                error('请到后台全局配置->参数配置->基本配置中填入「网站主域名」');
+            }
+            $domain_first = explode('.', $domain)[0];
+            define('PATH', P);
+            define('ISURL', TRUE);
+            if( $domain == $main_domain ){
+                //cookie('city','');
+                cookie('city',$this->config('firstcity'));
+            }else{
+                cookie('city',$domain_first);
+            }
+        }else{
+            $cur_city = array_filter($citys, function($t) use ($domain) { return $t['isurl'] == $domain; });
+            if( !empty($cur_city) ){
+                define('PATH', P);
+                define('ISURL', TRUE);
+                cookie('city',key($cur_city));
+            }else{
+                if( !empty(P) ){
+                    //.html结尾
+                    if( strpos(P,'/')===false && strpos(P,'.html')!==false ){
+                        $tmp = explode('.', P);
+                        if ( array_key_exists($tmp[0],$citys) ){
+                            define('PATH', '');
+                            cookie('city',$tmp[0]);
+                        }else{
+                            define('PATH', P);
+                            //cookie('city','');
+                            cookie('city',$this->config('firstcity'));
+                        }
+                    }elseif( strpos(P,'/')!==false ){ 
+                        $tmp = explode('/', P);
+                        if ( array_key_exists($tmp[0],$citys) ){
+                            $tmp_p = substr(P,strpos(P,'/')+1);
+                            define('PATH', $tmp_p);
+                            cookie('city',$tmp[0]);
+                        }else{
+                            define('PATH', P);
+                            //cookie('city','');
+                            cookie('city',$this->config('firstcity'));
+                        }
+                    }
+                }else{
+                    define('PATH', P);
+                    //cookie('city','');
+                    cookie('city',$this->config('firstcity'));
+                }
+            }
+        }
+        //===END=====
+
+
         // 未设置语言时使用默认语言
         $black_lg = ['pboot','system'];
         if (!isset($_COOKIE['lg']) || in_array($_COOKIE['lg'],$black_lg)) {

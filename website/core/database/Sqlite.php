@@ -20,7 +20,6 @@ class Sqlite implements Builder
     protected $slave;
 
     private $begin = false;
-
     private function __construct()
     {}
 

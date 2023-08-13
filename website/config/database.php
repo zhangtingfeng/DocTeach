@@ -9,7 +9,7 @@ return array(
 
         'type' => 'mysqli', // 数据库连接驱动类型: mysqli,sqlite,pdo_mysql,pdo_sqlite
 
-        'host' => '140.210.138.139', // 数据库服务器
+        'host' => '127.0.0.1', // 数据库服务器
 
         'user' => 'demo1', // 数据库连接用户名
 
@@ -19,7 +19,7 @@ return array(
 
         'dbname' => 'demo1' // 去掉注释，启用mysql数据库，注意修改前面的连接信息及type为mysqli
 
-        //'dbname' => '/data/d3450b5dcb69d58b44a403dc3ab3f31c.db' // 去掉注释，启用Sqlite数据库，注意修改type为sqlite
+        //'dbname' => '/data/pbootcms.db' // 去掉注释，启用Sqlite数据库，注意修改type为sqlite
     )
 
 );

@@ -12,7 +12,6 @@
 	    <li  lay-id="t7">URL规则</li>
 	    <li  lay-id="t8">标题样式</li>
 	    <li  lay-id="t9">会员配置</li>
-	    <li  lay-id="t10">远程附件配置</li>
 	  </ul>
 		  <div class="layui-tab-content">
 		  	   <div class="layui-tab-item layui-show">
@@ -26,7 +25,27 @@
 								<input type="radio" name="close_site" value="0" {if([$configs.close_site.value]==0)} checked="checked" {/if} title="开启">
 		                     </div>
 		                </div>
-		                
+		                	<div class="layui-form-item">
+							<label class="layui-form-label">泛域名</label>
+							<div class="layui-input-block">
+								<input type="radio" name="wildcard" value="1" {if([$configs.wildcard.value]==1)} checked="checked" {/if} title="启用">
+								<input type="radio" name="wildcard" value="0" {if([$configs.wildcard.value]==0)} checked="checked" {/if} title="禁用">
+							</div>
+					   	</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">默认城市</label>
+							<div class="layui-input-inline">
+								<input type="text" name="firstcity" value="{$configs.firstcity.value}" placeholder="请输入分站的英文名称"  class="layui-input">
+							</div>
+							<div class="layui-form-mid layui-word-aux">例如首页要默认显示为北京，则填写beijing。</div>
+					    </div>
+					    	<div class="layui-form-item">
+							<label class="layui-form-label">分站地图</label>
+							<div class="layui-input-inline">
+								<input type="radio" name="open_citymap" value="1" {if([$configs.open_citymap.value]==1)} checked="checked" {/if} title="启用">
+								<input type="radio" name="open_citymap" value="0" {if([$configs.open_citymap.value]==0)} checked="checked" {/if} title="禁用">
+							</div>
+					   	</div>
 			  	   	     <div class="layui-form-item">
 		                     <label class="layui-form-label">关站提示</label>
 		                     <div class="layui-input-inline">
@@ -546,11 +565,15 @@
 		                     <label class="layui-form-label">地址模式</label>
 		                     <div class="layui-input-block">
 		                     	<P>
+		                     		<input type="radio" name="url_rule_type" value="1" {if([$configs.url_rule_type.value]==1)} checked="checked" {/if} title="普通模式，类似：/index.php/product/1.html">
+		                     		<span class="layui-icon layui-icon-about tips" data-content="基本模式需要服务器支持pathinfo,特别是nginx下pathinfo要手动配置！"></span>
+		                     	</P>
+		                     	<P>
 		                     		<input type="radio" name="url_rule_type" value="2" {if([$configs.url_rule_type.value]==2)} checked="checked" {/if} title="伪静态模式，类似：/product/1.html">
 		                     		<span class="layui-icon layui-icon-about tips" data-content="伪静态时需要服务器环境的支持，并需要添加伪静态规则！"></span>
 								</P>
 		                     	<P>
-									<input type="radio" name="url_rule_type" value="3" {if([$configs.url_rule_type.value]==3||![$configs.url_rule_type.value])} checked="checked" {/if} title="兼容模式，首页/index.php也可正常访问，类似：/?product/1.html">
+									<input type="radio" name="url_rule_type" value="3" {if([$configs.url_rule_type.value]==3||![$configs.url_rule_type.value])} checked="checked" {/if} title="兼容模式，类似：/?product/1.html">
 								</P>
 		                     </div>
 		                </div>
@@ -823,6 +846,8 @@
 						</div>
 	              </form>
 		  	   </div>
+
+
 		  </div>
 	 </div>
 </div>
