@@ -55,7 +55,7 @@ return array(
     'log_record_type' => 'db',
     
     // 默认分页大小
-    'pagesize' => 15,
+    'pagesize' => 20,
     
     // 分页条数字数量
     'pagenum' => 5,

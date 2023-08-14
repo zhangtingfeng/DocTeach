@@ -32,14 +32,14 @@ def getMD5(stringinput):
 
 def getContent():
     #创建浏览器对象
-    time.sleep(random.randint(5, 200))
+    time.sleep(random.randint(5, 7))
     Browerdriver = webdriver.Edge()
     Browerdriver.get("http://edu.sh.gov.cn/xwzx_bsxw/index.html")
     #打印页面标题“百度一下你就知道”
     print(Browerdriver.title)
 
     # 打开数据库连接
-    dbconn = pymysql.connect(host='140.210.138.139',
+    dbconn = pymysql.connect(host='127.0.0.1',
                         user='demo1',
                         password='Foodztf1#',
                         database='demo1')
@@ -50,7 +50,7 @@ def getContent():
     cursor=dbconn.cursor()
     #sql语句中，用%s做占位符，参数用一个元组
     insertSql="insert into ay_content(title,content,author,md5sign) values(%s,%s,%s,%s)"
-    insertSqlay_content_sateArea="insert into ay_content_sateArea(ay_content_ID,Statearea_ID) values(%s,31)"
+    insertSqlay_content_sateArea="insert into ay_content_city(content_ID,city_ID) values(%s,9)"
     crulink=0
     while True:
         
@@ -97,6 +97,7 @@ def getContent():
                         param=(inserted_id)
                         cursor.execute(insertSqlay_content_sateArea,param)
                         dbconn.commit()
+                time.sleep(random.randint(5, 7))
             except Exception as e:
                 logging.error("主程序抛错：")
                 logging.error(e)
@@ -105,7 +106,7 @@ def getContent():
             except: 
                 print("11")    
             finally:
-                time.sleep(random.randint(5, 200))    #暂停5秒输出下一指令
+                time.sleep(random.randint(5, 6))    #暂停5秒输出下一指令
                 Browerdriver.back()
                 print("12")    
                #退出try语句块总会执行的程序 

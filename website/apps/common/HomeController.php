@@ -123,6 +123,13 @@ class HomeController extends Controller
                     }elseif( strpos(P,'/')!==false ){ 
                         $tmp = explode('/', P);
                         if ( array_key_exists($tmp[0],$citys) ){
+                            foreach ($citys as $key => $val) {
+                                if ($val["etitle"] == $tmp[0] )
+                                {
+                                    cookie('cityid',$val["id"]);
+                                    break;
+                                }
+                            }
                             $tmp_p = substr(P,strpos(P,'/')+1);
                             define('PATH', $tmp_p);
                             cookie('city',$tmp[0]);
@@ -147,7 +154,7 @@ class HomeController extends Controller
         if (!isset($_COOKIE['lg']) || in_array($_COOKIE['lg'],$black_lg)) {
             cookie('lg', get_default_lg());
         }
-        
+
         // 手机自适应主题
         if ($this->config('open_wap')) {
             if ($this->config('wap_domain') && $this->config('wap_domain') == get_http_host()) {

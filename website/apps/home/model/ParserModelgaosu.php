@@ -140,8 +140,21 @@ class ParserModel extends Model
             "date<'" . date('Y-m-d H:i:s') . "'"
         );
 
+        $cityid = cookie('cityid');
+        if ($cityid) {
+            array_push($where2, 'g.city_ID=' . $cityid);
+        }
+        $join = array(
+            array(
+                'ay_content_city g',
+                'ay_content.id=g.city_ID',
+                'left'
+            )
+        );
+
         $result = parent::table('ay_content')->where($where1, 'OR')
             ->where($where2)
+            ->join($join)
             ->column('id');
         return count($result);
     }

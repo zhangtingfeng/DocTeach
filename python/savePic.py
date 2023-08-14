@@ -132,7 +132,7 @@ def savePic(img_elements,SaveCatgory,numName,Browerdriver):
 
                         setAttribute(Browerdriver, img_element, 'src', picurlPath+curpicpath)
                         setAttribute(Browerdriver, img_element, 'style.height', "auto !important")
-                        if (SaveCatgory=="Pic3205Suzhou"):
+                        if (SaveCatgory=="Pic106Suzhou"):
                             removeAttribute(Browerdriver,img_element.find_element(By.XPATH,".."),"href")
                         #setAttribute(Browerdriver, img_element.parent, 'h', picurlPath + curpicpath)
                         #Browerdriver.execute_script("arguments[0].setAttribute('src', '"+picurlPath+curpicpath+"')", img_element)

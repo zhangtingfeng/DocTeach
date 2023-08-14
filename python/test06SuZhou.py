@@ -67,9 +67,9 @@ def getContent():
             time.sleep(random.randint(1, 2))  # 暂停5秒输出下一指令
             img_elements = element02Content.find_elements(by=By.TAG_NAME, value='img')
             maxCount = getMaxCountNumFromContent() + 1
-            savePic(img_elements, "Pic3205Suzhou", maxCount, Browerdriver)
+            savePic(img_elements, "Pic106Suzhou", maxCount, Browerdriver)
             Out_Content = element02Content.get_attribute('innerHTML')
-            saveContent(Out_title, Out_Content, Out_Comfrom, sourceContent, 3205)
+            saveContent(Out_title, Out_Content, Out_Comfrom, sourceContent, 106)
             time.sleep(random.randint(5, 20))  # 暂停5秒输出下一指令
         except Exception as e:
             logging.error("主程序抛错：")

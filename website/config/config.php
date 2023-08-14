@@ -14,7 +14,7 @@ return array(
     'session_in_sitepath' => 1,
     
     // 默认分页大小
-    'pagesize' => 15,
+    'pagesize' => 10,
     
     // 分页条数字数量
     'pagenum' => 5,

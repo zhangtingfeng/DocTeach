@@ -21,7 +21,7 @@ def runMain():
 
 
 def getContent():
-    time.sleep(random.randint(5, 200))
+    time.sleep(random.randint(5, 10))
     # 创建浏览器对象
     Browerdriver = webdriver.Edge()
     Browerdriver.get("http://jyt.henan.gov.cn/jydt/")
@@ -62,10 +62,10 @@ def getContent():
                 sourceContent = element02Content.get_attribute('innerHTML')
                 img_elements = element02Content.find_elements(by=By.TAG_NAME, value='img')
                 maxCount=getMaxCountNumFromContent()+1
-                savePic(img_elements, "Pic41Henan",maxCount, Browerdriver)
+                savePic(img_elements, "Pic16Henan",maxCount, Browerdriver)
                 Out_Content = element02Content.get_attribute('innerHTML')
-                saveContent(Out_title, Out_Content, Out_Comfrom,sourceContent,41)
-
+                saveContent(Out_title, Out_Content, Out_Comfrom,sourceContent,16)
+                time.sleep(random.randint(5, 20))
             except Exception as e:
                 logging.error("主程序抛错：")
                 logging.error(e)
@@ -76,7 +76,7 @@ def getContent():
             finally:
                 Browerdriver.close()
                 Browerdriver.switch_to.window(handle_main)
-                time.sleep(random.randint(5, 200))
+                time.sleep(random.randint(1, 6))
                 print("12")
                 # 退出try语句块总会执行的程序
 

@@ -43,13 +43,13 @@ def getMaxCountNumFromContent():
     return myresult
 
 
-def saveContent(Out_title,Out_Content,Out_Comfrom,sourceContent,Statearea_ID):
+def saveContent(Out_title,Out_Content,Out_Comfrom,sourceContent,intcity_ID):
     dbconn=getConn()
     # 获取一个游标对象
     cursor = dbconn.cursor()
     # sql语句中，用%s做占位符，参数用一个元组
     insertSql = "insert into ay_content(title,content,author,md5sign) values(%s,%s,%s,%s)"
-    insertSqlay_content_sateArea = "insert into ay_content_sateArea(ay_content_ID,Statearea_ID) values(%s,"+str(Statearea_ID)+")"
+    insertSqlay_content_sateArea = "insert into ay_content_city(content_ID,city_ID) values(%s,"+str(intcity_ID)+")"
 
     stringlen = len(Out_Content)
     print(stringlen)

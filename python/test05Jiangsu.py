@@ -67,9 +67,9 @@ def getContent():
                 sourceContent = element02Content.get_attribute('innerHTML')
                 img_elements = element02Content.find_elements(by=By.TAG_NAME, value='img')
                 maxCount=getMaxCountNumFromContent()+1
-                savePic(img_elements, "Pic32Jiangsu",maxCount, Browerdriver)
+                savePic(img_elements, "Pic10Jiangsu",maxCount, Browerdriver)
                 Out_Content = element02Content.get_attribute('innerHTML')
-                saveContent(Out_title, Out_Content, Out_Comfrom,sourceContent,32)
+                saveContent(Out_title, Out_Content, Out_Comfrom,sourceContent,10)
 
             except Exception as e:
                 logging.error("主程序抛错：")

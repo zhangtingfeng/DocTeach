@@ -10,9 +10,10 @@
 
 	 <!-- 列表内容 -->
      <ul>
-        {pboot:list num=10 order=date}
-        	<li class="lh-3 border-bottom-dashed">
-                <i class="fa fa-gg"></i>
+        {pboot:list order=date}
+        	<li class="lh-3 border-bottom-dashed  {pboot:if([list:i]%2==0)}newsbg-dark{/pboot:if}">
+                
+				<i class="fa fa-gg"></i>
                 <a href="[list:link]">
                 	<span class="d-none d-md-inline">[list:title lencn=30]</span><!-- PC端 -->
                 	<span class="d-inline d-md-none">[list:title lencn=11]</span><!-- 移动端 -->
@@ -35,4 +36,11 @@
  	
 </div>
 
+<style type="text/css">
+    .newsbg-dark {
+        background-color: #d2f6f7;
+    }
+
+   
+</style>
 {include file=comm/foot.html}

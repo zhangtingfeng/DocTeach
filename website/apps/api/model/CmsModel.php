@@ -499,6 +499,11 @@ class CmsModel extends Model
         return parent::table('ay_message')->autoTime()->insert($data);
     }
 
+    // 新增visit
+    public function adduservistlog($table, $data)
+    {
+        return parent::table('uservistlog')->insert($data);
+    }
     // 获取表单字段
     public function getFormField($fcode)
     {

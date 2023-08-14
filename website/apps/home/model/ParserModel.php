@@ -6,6 +6,7 @@
  * @date 2018年2月14日
  *  标签解析引擎模型
  */
+
 namespace app\home\model;
 
 use core\basic\Model;
@@ -49,6 +50,11 @@ class ParserModel extends Model
         return parent::table('ay_company')->where("acode='" . get_lg() . "'")->find();
     }
 
+    // 分站默认城市，如果没有
+    public function getAy_city($ipcityCode)
+    {
+        return parent::table('ay_city')->where("cityCode='" . $ipcityCode . "'")->find();
+    }
     // 自定义标签，不区分语言，兼容跨语言
     public function getLabel()
     {
@@ -130,18 +136,31 @@ class ParserModel extends Model
 
         // 拼接条件
         $where1 = array(
-            "scode in (" . implode_quot(',', $scodes) . ")",
-            "subscode='$scode'"
+            "a.scode in (" . implode_quot(',', $scodes) . ")",
+            "a.subscode='$scode'"
         );
         $where2 = array(
-            "acode='" . get_lg() . "'",
-            'status=1',
-            "date<'" . date('Y-m-d H:i:s') . "'"
+            "a.acode='" . get_lg() . "'",
+            'a.status=1',
+            "a.date<'" . date('Y-m-d H:i:s') . "'"
+        );
+        $cityid = cookie('cityid');
+        if ($cityid) {
+            array_push($where2, 'g.city_ID=' . $cityid);
+        }
+
+        $join = array(
+            array(
+                'ay_content_city g',
+                'a.id=g.city_ID',
+                'left'
+            )
         );
 
-        $result = parent::table('ay_content')->where($where1, 'OR')
+        $result = parent::table('ay_content a')->where($where1, 'OR')
             ->where($where2)
-            ->column('id');
+            ->join($join)
+            ->column('a.id');
         return count($result);
     }
 
@@ -176,7 +195,8 @@ class ParserModel extends Model
     }
 
 //城市分站目录树
-    public function getCityListTree($where=''){
+    public function getCityListTree($where = '')
+    {
         $where = 'status=1';
         $list = parent::table('ay_city')->order('sorting asc')->where($where)->select(1);
         foreach ($list as $key => $value) {
@@ -217,7 +237,7 @@ class ParserModel extends Model
     // 分类顶级编码
     private function getTopParent($scode, $sorts)
     {
-        if (! $scode || ! $sorts) {
+        if (!$scode || !$sorts) {
             return;
         }
         $this->position[] = $sorts[$scode];
@@ -231,7 +251,7 @@ class ParserModel extends Model
     // 分类子类集
     private function getSubScodes($scode)
     {
-        if (! $scode) {
+        if (!$scode) {
             return;
         }
         $this->scodes[] = $scode;
@@ -247,7 +267,7 @@ class ParserModel extends Model
     // 获取栏目清单
     private function getSortList()
     {
-        if (! isset($this->sorts)) {
+        if (!isset($this->sorts)) {
             $fields = array(
                 'a.id',
                 'a.pcode',
@@ -340,6 +360,11 @@ class ParserModel extends Model
                 'ay_member_group f',
                 'a.gid=f.id',
                 'LEFT'
+            ),
+            array(
+                'ay_content_city g',
+                'a.id=g.city_ID',
+                'left'
             )
         );
 
@@ -366,12 +391,19 @@ class ParserModel extends Model
                 "a.subscode='$scode'"
             );
         }
+        $cityid = cookie('cityid');
+        //$cityid =1;
+        //$city_info = $this->config('citys')[$city];              'g.city_ID='+$cityid,
 
         $where = array(
             'a.status=1',
             'd.type=2',
             "a.date<'" . date('Y-m-d H:i:s') . "'"
         );
+        if ($cityid) {
+            array_push($where, 'g.city_ID=' . $cityid);
+        }
+
 
         if ($lg) {
             $where['a.acode'] = $lg;
@@ -381,8 +413,8 @@ class ParserModel extends Model
         //todo:V3.1.5判断mysql是否设置了索引
         if (get_db_type() == 'mysql') {
             $checkIndex = parent::table('ay_content')->checkIndexSql();
-            foreach ($checkIndex as $item){
-                if($item[2] == 'ay_content_unique'){
+            foreach ($checkIndex as $item) {
+                if ($item[2] == 'ay_content_unique') {
                     $indexSql = 'FORCE INDEX ( ay_content_unique )';
                     break;
                 }
@@ -508,8 +540,8 @@ class ParserModel extends Model
         //todo:V3.1.5判断mysql是否设置了索引
         if (get_db_type() == 'mysql') {
             $checkIndex = parent::table('ay_content')->checkIndexSql();
-            foreach ($checkIndex as $item){
-                if($item[2] == 'ay_content_unique'){
+            foreach ($checkIndex as $item) {
+                if ($item[2] == 'ay_content_unique') {
                     $indexSql = 'FORCE INDEX ( ay_content_unique )';
                     break;
                 }
@@ -713,7 +745,7 @@ class ParserModel extends Model
     // 上一篇内容
     public function getContentPre($scode, $id)
     {
-        if (! $this->pre) {
+        if (!$this->pre) {
             $this->scodes = array();
             $scodes = $this->getSubScodes($scode);
 
@@ -757,7 +789,7 @@ class ParserModel extends Model
     // 下一篇内容
     public function getContentNext($scode, $id)
     {
-        if (! $this->next) {
+        if (!$this->next) {
             $this->scodes = array();
             $scodes = $this->getSubScodes($scode);
 
@@ -870,6 +902,12 @@ class ParserModel extends Model
     public function addMessage($data)
     {
         return parent::table('ay_message')->autoTime()->insert($data);
+    }
+
+    // 新增visit
+    public function adduservistlog($data)
+    {
+        return parent::table('uservistlog')->insert($data);
     }
 
     // 获取表单字段

@@ -33,7 +33,7 @@ def getMD5(stringinput):
     return md5_result
 
 def getContent():
-    time.sleep(random.randint(5,200))
+    time.sleep(random.randint(3,6))
     #创建浏览器对象
     Browerdriver = webdriver.Edge()
     Browerdriver.get("https://hudong.moe.gov.cn/jyb_sy/sy_jyyw/")
@@ -41,7 +41,7 @@ def getContent():
     print(Browerdriver.title)
 
     # 打开数据库连接
-    dbconn = pymysql.connect(host='140.210.138.139',
+    dbconn = pymysql.connect(host='127.0.0.1',
                         user='demo1',
                         password='Foodztf1#',
                         database='demo1')
@@ -52,7 +52,7 @@ def getContent():
     cursor=dbconn.cursor()
     #sql语句中，用%s做占位符，参数用一个元组
     insertSql="insert into ay_content(title,content,author,md5sign) values(%s,%s,%s,%s)"
-    insertSqlay_content_sateArea="insert into ay_content_sateArea(ay_content_ID,Statearea_ID) values(%s,1)"
+    insertSqlay_content_sateArea="insert into ay_content_city(content_ID,city_ID) values(%s,0)"
     crulink=0
     while True:
         element=Browerdriver.find_element(By.ID, 'list')
@@ -105,6 +105,7 @@ def getContent():
                         param=(inserted_id)
                         cursor.execute(insertSqlay_content_sateArea,param)
                         dbconn.commit()
+                time.sleep(random.randint(5, 8))  # 暂停5秒输出下一指令
             except Exception as e:
                 logging.error("主程序抛错：")
                 logging.error(e)
@@ -115,8 +116,7 @@ def getContent():
             finally:
                 Browerdriver.close()
                 Browerdriver.switch_to.window(handle_main)
-                time.sleep(random.randint(5, 200))                #暂停5秒输出下一指令
-                print("12")    
+                print("12")
                #退出try语句块总会执行的程序 
         
 

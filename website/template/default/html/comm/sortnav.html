@@ -1,6 +1,6 @@
 <!-- 分类导航 -->
 <div class="sonsort mt-4 mb-2">
-    {pboot:nav num=10 parent={sort:tcode}}
+    {pboot:nav parent={sort:tcode}}
     	{pboot:if([nav:i]==1)}
             {pboot:2if('{sort:scode}'=='{sort:tcode}')}
                 <a href="{sort:toplink}" class="btn btn-info mb-2">全部 <span class="badge badge-light">{sort:toprows}</a>
