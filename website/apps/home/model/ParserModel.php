@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright (C)2016-2099 Hnaoyun Inc.
  * @author XingMeng
@@ -53,8 +54,30 @@ class ParserModel extends Model
     // 分站默认城市，如果没有
     public function getAy_city($ipcityCode)
     {
-        return parent::table('ay_city')->where("cityCode='" . $ipcityCode . "'")->find();
+        $Datastatus = parent::table('ay_city')->where("cityCode='" . $ipcityCode . "'")->find();
+        if ($Datastatus) {
+            if ($Datastatus->status == 1) {
+                return $Datastatus;
+            } else {
+                return $this->getAy_city_Status($Datastatus->pid);
+            }
+        }
+        return null;
     }
+
+    public function getAy_city_Status($pid)
+    {
+        $pDatastatus = parent::table('ay_city')->where("id=" . $pid . "")->find();
+        if ($pDatastatus) {
+            if ($pDatastatus->status == 1) {
+                return $pDatastatus;
+            } else {
+                return $this->getAy_city_Status($pDatastatus . pid);
+            }
+        }
+    }
+
+
     // 自定义标签，不区分语言，兼容跨语言
     public function getLabel()
     {
@@ -152,7 +175,7 @@ class ParserModel extends Model
         $join = array(
             array(
                 'ay_content_city g',
-                'a.id=g.city_ID',
+                'a.id=g.content_ID',
                 'left'
             )
         );
@@ -194,7 +217,7 @@ class ParserModel extends Model
         return $data;
     }
 
-//城市分站目录树
+    //城市分站目录树
     public function getCityListTree($where = '')
     {
         $where = 'status=1';
@@ -363,7 +386,7 @@ class ParserModel extends Model
             ),
             array(
                 'ay_content_city g',
-                'a.id=g.city_ID',
+                'a.id=g.content_ID',
                 'left'
             )
         );
@@ -499,6 +522,11 @@ class ParserModel extends Model
                 'ay_member_group f',
                 'a.gid=f.id',
                 'LEFT'
+            ),
+            array(
+                'ay_content_city g',
+                'a.id=g.content_ID',
+                'left'
             )
         );
 
@@ -531,6 +559,10 @@ class ParserModel extends Model
             'd.type=2',
             "a.date<'" . date('Y-m-d H:i:s') . "'"
         );
+        $cityid = cookie('cityid');
+        if ($cityid) {
+            array_push($where, 'g.city_ID=' . $cityid);
+        }
 
         if ($lg) {
             $where['a.acode'] = $lg;

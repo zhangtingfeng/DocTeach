@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright (C)2016-2099 Hnaoyun Inc.
  * @author XingMeng
@@ -33,8 +34,11 @@ class IndexController extends Controller
 
     private function _ipname()
     {
-        $ip = $_SERVER["REMOTE_ADDR"];//获取ip
+        $ip = $_SERVER["REMOTE_ADDR"]; //获取ip
 
+        if (cookie('ipcityid') == $ip) {
+            return;
+        }
         $ch = curl_init();
         $url = 'https://whois.pconline.com.cn/ipJson.jsp?ip=' . $ip;
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -57,16 +61,20 @@ class IndexController extends Controller
         if ($this->model->adduservistlog($datavist)) {
             $this->log('visit提交成功！');
         }
-        $cur_city = cookie('city');
-        if( !$cur_city ){
-           $Data= $this->model->getAy_city($addressInfo["cityCode"]);
-            cookie('city',$Data->etitle);
-            cookie('cityid',$Data->id);
+        //$cur_city = cookie('city');
+        //if (!$cur_city) {
+        $Data = $this->model->getAy_city($addressInfo["cityCode"]);
+        if ($Data) {
+            cookie('city', $Data->etitle);
+            cookie('cityid', $Data->id);
+        } else {
+            cookie('cityid', -1);
         }
-
+        cookie('ipcityid', $ip, time() + 1800); //half an hour
+        //}
     }
 
-// 空拦截器, 实现文章路由转发
+    // 空拦截器, 实现文章路由转发
     public
     function _empty()
     {
@@ -266,7 +274,7 @@ class IndexController extends Controller
         }
     }
 
-// 首页
+    // 首页
     private
     function getIndexPage()
     {
@@ -290,7 +298,7 @@ class IndexController extends Controller
         $this->cache($content, true);
     }
 
-// 列表
+    // 列表
     private
     function getListPage($sort)
     {
@@ -316,7 +324,7 @@ class IndexController extends Controller
         $this->cache($content, true);
     }
 
-// 详情页
+    // 详情页
     private
     function getContentPage($data)
     {
@@ -350,7 +358,7 @@ class IndexController extends Controller
         $this->cache($content, true);
     }
 
-// 单页
+    // 单页
     private
     function getAboutPage($sort)
     {
@@ -384,7 +392,7 @@ class IndexController extends Controller
         $this->cache($content, true);
     }
 
-// 检查页面权限
+    // 检查页面权限
     private
     function checkPageLevel($gcode, $gtype, $gnote)
     {
@@ -433,7 +441,7 @@ class IndexController extends Controller
         }
     }
 
-//首页跳转并过滤注入字符
+    //首页跳转并过滤注入字符
     /*
      * @param $type url模式
      * @param $isSecSiteDir 是否为二级目录 boolean
@@ -444,7 +452,7 @@ class IndexController extends Controller
         $http = is_https() ? 'https://' : 'http://';
         $matches1 = '';
         switch ($type) {
-            //普通模式
+                //普通模式
             case 1:
                 $preg1 = '';
                 if ($isSecSiteDir === true) {
@@ -458,7 +466,7 @@ class IndexController extends Controller
                 }
                 preg_match($preg1, $_SERVER['REQUEST_URI'], $matches1);
                 break;
-            //伪静态
+                //伪静态
             case 2:
                 $preg2 = '';
                 if ($isSecSiteDir === true) {
@@ -472,7 +480,7 @@ class IndexController extends Controller
                 }
                 preg_match($preg2, $_SERVER['REQUEST_URI'], $matches1);
                 break;
-            //兼容模式
+                //兼容模式
             case 3:
                 $preg3 = '';
                 if ($isSecSiteDir === true) {
