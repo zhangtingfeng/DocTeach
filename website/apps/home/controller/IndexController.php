@@ -36,7 +36,7 @@ class IndexController extends Controller
     {
         $ip = $_SERVER["REMOTE_ADDR"]; //获取ip
 
-        if (cookie('ipcityid') == $ip) {
+        if (cookie('ipcityid') == $ip  && (cookie('city')!=null)) {
             return;
         }
         $ch = curl_init();
