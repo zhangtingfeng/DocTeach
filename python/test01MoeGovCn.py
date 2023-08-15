@@ -52,7 +52,7 @@ def getContent():
     cursor=dbconn.cursor()
     #sql语句中，用%s做占位符，参数用一个元组
     insertSql="insert into ay_content(title,content,author,md5sign) values(%s,%s,%s,%s)"
-    insertSqlay_content_sateArea="insert into ay_content_city(content_ID,city_ID) values(%s,0)"
+    insertSqlay_content_sateArea="insert into ay_content_city(content_ID,city_ID) values(%s,-1)"
     crulink=0
     while True:
         element=Browerdriver.find_element(By.ID, 'list')
