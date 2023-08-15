@@ -43,7 +43,7 @@ def getMaxCountNumFromContent():
     return myresult
 
 
-def saveContent(Out_title,Out_Content,Out_Comfrom,sourceContent,intcity_ID):
+def saveContent(Out_title,Out_Content,Out_Comfrom,md5sourceContent,intcity_ID):
     dbconn=getConn()
     # 获取一个游标对象
     cursor = dbconn.cursor()
@@ -54,7 +54,7 @@ def saveContent(Out_title,Out_Content,Out_Comfrom,sourceContent,intcity_ID):
     stringlen = len(Out_Content)
     print(stringlen)
     if stringlen < 65535000000:
-        md5Sign = getMD5(Out_title + sourceContent + Out_Comfrom)
+        md5Sign = getMD5(Out_title + md5sourceContent + Out_Comfrom)
         # 执行SELECT语句
         SelctCountsql = "SELECT count(1) FROM ay_content WHERE md5sign = '" + md5Sign + "'"
         cursor.execute(SelctCountsql)

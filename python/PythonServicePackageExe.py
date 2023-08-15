@@ -13,6 +13,6 @@ from PyInstaller.__main__ import run
 
 if __name__ == '__main__':
 
-  params = ['test01MoeGovCn.py', '-F', '-c']
+  params = ['test08Guangdong.py', '-F', '-c']
 
   run(params)
