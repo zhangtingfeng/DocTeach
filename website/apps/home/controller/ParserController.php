@@ -129,6 +129,7 @@ class ParserController extends Controller
             $content = str_replace('{pboot:login}', Url::home('member/login'), $content); // 登录地址
         }
         
+        $content = str_replace('{pboot:fastregister}', Url::home('student/fastregister'), $content); // 家长快速注册地址
         $content = str_replace('{pboot:register}', Url::home('member/register'), $content); // 注册地址
         $content = str_replace('{pboot:retrieve}', Url::home('member/retrieve'), $content); //找回密码
         $content = str_replace('{pboot:isregister}', Url::home('member/isRegister'), $content); // 检查是否注册地址

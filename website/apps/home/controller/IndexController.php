@@ -35,7 +35,6 @@ class IndexController extends Controller
     private function _ipname()
     {
         $ip = $_SERVER["REMOTE_ADDR"]; //获取ip
-
         if (cookie('ipcityid') == $ip  && (cookie('city')!=null)) {
             return;
         }
@@ -58,6 +57,7 @@ class IndexController extends Controller
         $datavist['name'] = $addressInfo["addr"];
         $datavist['alljson'] = $data;
 
+
         if ($this->model->adduservistlog($datavist)) {
             $this->log('visit提交成功！');
         }
@@ -70,6 +70,9 @@ class IndexController extends Controller
         } else {
             cookie('cityid', -1);
         }
+
+        cookie('RealityCity', $addressInfo["city"]); //half an hour
+
         cookie('ipcityid', $ip, time() + 1800); //half an hour
         //}
     }
@@ -154,6 +157,10 @@ class IndexController extends Controller
                 case 'member':
                     $member = new MemberController();
                     $member->{$path_arr[1]}();
+                    break;
+                case 'student':
+                    $student = new StudentController();
+                    $student->{$path_arr[1]}();
                     break;
                 case 'comment':
                     $comment = new CommentController();

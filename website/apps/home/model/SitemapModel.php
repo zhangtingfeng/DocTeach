@@ -6,6 +6,7 @@
  * @date 2018年2月14日
  *  Sitemap模型
  */
+
 namespace app\home\model;
 
 use core\basic\Model;
@@ -64,13 +65,13 @@ class SitemapModel extends Model
                 'LEFT'
             )
         );
-        
+
         $where = array(
             'a.status=1',
             'c.type=2',
             "a.date<'" . date('Y-m-d H:i:s') . "'"
         );
-        
+
         return parent::table('ay_content a')->field($fields)
             ->where("a.scode='$scode'")
             ->where($where)

@@ -16,9 +16,7 @@ class GetPageController extends Controller
 {
 
     protected $parser;
-
     protected $model;
-
     protected $tplhtmldir;
 
     public function __construct()

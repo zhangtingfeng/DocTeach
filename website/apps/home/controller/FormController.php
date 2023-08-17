@@ -50,11 +50,17 @@ class FormController extends Controller
             // 验证码验证
             $checkcode = strtolower(post('checkcode', 'var'));
             if ($this->config('form_check_code') !== '0') {
-                if (! $checkcode) {
-                    alert_back('验证码不能为空！');
+                $telfoot = post('telfoot');
+                if ($telfoot==1){
+
                 }
-                if ($checkcode != session('checkcode')) {
-                    alert_back('验证码错误！');
+                else{
+                    if (! $checkcode) {
+                        alert_back('验证码不能为空！');
+                    }
+                    if ($checkcode != session('checkcode')) {
+                        alert_back('验证码错误！');
+                    }
                 }
             }
             

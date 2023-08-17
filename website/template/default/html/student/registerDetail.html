@@ -1,0 +1,534 @@
+{include file=comm/head.html}
+
+{include file=comm/top.html}
+
+<div class="container pages">
+
+    {include file=comm/position.html}
+
+    <!-- 用户注册 -->
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-12 col-lg-6" id="miao">
+
+            <p style="text-align:center;line-height:1.1;">
+            <div style="font-family:SourceHanSansCN-Regular;">
+                <b>
+                    <div style="color:rgb(41,105,176);font-family:PuHuiTi-Bold;font-size:1.625rem;text-align: center">
+                        <span
+                                id="cookiesRealityCity"></span><span>立即预约</span>
+                    </div>
+                </b>
+
+            </div>
+            </p>
+            <form class="my-4" onsubmit="return FastRegister(this);">
+                <div class="fgroup">
+                    <h4>学员信息</h4>
+                    <div class="fg">
+                        <span>联&nbsp;系&nbsp;&nbsp;人：</span><input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="fg">
+                        <span>手&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机：</span><input type="text" id="mobile"
+                                                                                         name="mobile"
+                                                                                         style="cursor: default;">
+                    </div>
+                    <div class="fg">
+                        <span>微&nbsp;信&nbsp;&nbsp;号：</span><input type="text" id="wx_account" name="wx_account">
+                    </div>
+                    <div class="fg">
+                        <span>求教科目：</span>
+                        <script type="text/javascript">    function change_node_id(val) {
+                            var list = eval({
+                                "1": {
+                                    "100": "\u5c0f\u5b66\u6570\u5b66",
+                                    "102": "\u5c0f\u5b66\u82f1\u8bed",
+                                    "109": "\u5c0f\u5b66\u8bed\u6587",
+                                    "565": "\u5bb6\u5ead\u6559\u80b2",
+                                    "134": "\u5e7c\u6559",
+                                    "241": "\u5b66\u524d\u6559\u80b2",
+                                    "242": "\u966a\u73a9\u966a\u8bfb",
+                                    "300": "\u5c0f\u5b66\u966a\u8bfb",
+                                    "542": "\u661f\u7ea7\u82f1\u8bed",
+                                    "143": "\u5c0f\u5b66\u5965\u6570"
+                                },
+                                "2": {
+                                    "110": "\u521d\u4e00\u521d\u4e8c\u82f1\u8bed",
+                                    "111": "\u521d\u4e00\u521d\u4e8c\u6570\u5b66",
+                                    "118": "\u521d\u4e00\u521d\u4e8c\u5316\u5b66",
+                                    "101": "\u521d\u4e00\u521d\u4e8c\u7269\u7406",
+                                    "129": "\u521d\u4e00\u521d\u4e8c\u8bed\u6587",
+                                    "119": "\u521d\u4e09\u6570\u5b66",
+                                    "126": "\u521d\u4e09\u7269\u7406",
+                                    "120": "\u521d\u4e09\u5316\u5b66",
+                                    "130": "\u521d\u4e09\u8bed\u6587",
+                                    "164": "\u521d\u4e2d\u5386\u53f2",
+                                    "173": "\u521d\u4e2d\u5730\u7406",
+                                    "558": "\u521d\u4e2d\u751f\u7269",
+                                    "566": "\u5bb6\u5ead\u6559\u80b2",
+                                    "112": "\u521d\u4e09\u82f1\u8bed",
+                                    "186": "\u521d\u4e2d\u5965\u6570",
+                                    "560": "\u9884\u5907\u73ed",
+                                    "570": "\u521d\u4e2d\u79d1\u5b66",
+                                    "572": "\u521d\u4e2d\u653f\u6cbb"
+                                },
+                                "3": {
+                                    "121": "\u9ad8\u4e00\u9ad8\u4e8c\u6570\u5b66",
+                                    "127": "\u9ad8\u4e00\u9ad8\u4e8c\u7269\u7406",
+                                    "122": "\u9ad8\u4e00\u9ad8\u4e8c\u5316\u5b66",
+                                    "123": "\u9ad8\u4e00\u9ad8\u4e8c\u8bed\u6587",
+                                    "124": "\u9ad8\u4e09\u6570\u5b66",
+                                    "128": "\u9ad8\u4e09\u7269\u7406",
+                                    "125": "\u9ad8\u4e09\u5316\u5b66",
+                                    "135": "\u9ad8\u4e09\u8bed\u6587",
+                                    "156": "\u9ad8\u4e2d\u5386\u53f2",
+                                    "174": "\u9ad8\u4e2d\u5730\u7406",
+                                    "568": "\u653f\u6cbb",
+                                    "114": "\u9ad8\u4e00\u9ad8\u4e8c\u82f1\u8bed",
+                                    "544": "\u6587\u7efc",
+                                    "543": "\u7406\u7efc",
+                                    "541": "\u4fe1\u606f\u79d1\u6280",
+                                    "334": "\u9ad8\u4e2d\u751f\u7269",
+                                    "115": "\u9ad8\u4e09\u82f1\u8bed"
+                                },
+                                "573": {
+                                    "581": "\u8003\u535a\u4e13\u4e1a\u8bfe",
+                                    "591": "\u82f1\u8bed\u4e13\u4e1a\u516b\u7ea7",
+                                    "590": "\u82f1\u8bed\u4e13\u4e1a\u56db\u7ea7",
+                                    "589": "\u8003\u7814\u82f1\u8bed",
+                                    "588": "\u8003\u7814\u6570\u5b66",
+                                    "587": "\u8003\u7814\u653f\u6cbb",
+                                    "586": "\u8003\u7814\u4e13\u4e1a\u8bfe",
+                                    "585": "\u5728\u804c\u7814\u7a76\u751f\u8bba\u6587\u6307\u5bfc",
+                                    "584": "\u82f1\u8bed\u516d\u7ea7",
+                                    "583": "\u82f1\u8bed\u56db\u7ea7",
+                                    "582": "\u8003\u535a\u82f1\u8bed",
+                                    "170": "\u96c5\u601d",
+                                    "580": "\u8003\u535a\u9762\u8bd5\u8f85\u5bfc",
+                                    "579": "\u4e13\u5347\u672c",
+                                    "578": "\u81ea\u5b66\u8003\u8bd5",
+                                    "576": "\u56fd\u5b66",
+                                    "575": "\u6210\u4eba\u9ad8\u8003",
+                                    "574": "MBA",
+                                    "555": "\u5fae\u89c2\u7ecf\u6d4e\u5b66",
+                                    "217": "\u6258\u798f",
+                                    "176": "\u9ad8\u7b49\u6570\u5b66"
+                                },
+                                "4": {
+                                    "132": "\u82f1\u8bed\u53e3\u8bed",
+                                    "137": "\u65b0\u6982\u5ff5\u82f1\u8bed",
+                                    "154": "\u725b\u6d25\u82f1\u8bed",
+                                    "171": "\u5546\u52a1\u82f1\u8bed",
+                                    "105": "\u65e5\u8bed",
+                                    "180": "\u97e9\u8bed",
+                                    "161": "\u5fb7\u8bed",
+                                    "203": "\u610f\u5927\u5229\u8bed",
+                                    "155": "\u897f\u73ed\u7259\u8bed",
+                                    "236": "\u963f\u62c9\u4f2f\u8bed",
+                                    "225": "\u5bf9\u5916\u6c49\u8bed",
+                                    "175": "\u6cd5\u8bed",
+                                    "244": "sbs\u82f1\u8bed",
+                                    "248": "\u4fc4\u8bed",
+                                    "346": "\u8461\u8404\u7259\u8bed",
+                                    "562": "\u5251\u6865\u82f1\u8bed"
+                                },
+                                "5": {
+                                    "213": "\u5409\u4ed6",
+                                    "569": "\u94a2\u7434\u966a\u7ec3",
+                                    "567": "\u626c\u7434",
+                                    "563": "\u821e\u8e48",
+                                    "557": "\u67b6\u5b50\u9f13",
+                                    "556": "\u7af9\u7b1b",
+                                    "332": "\u4e2d\u63d0\u7434",
+                                    "280": "\u5706\u53f7",
+                                    "274": "\u6253\u51fb\u4e50",
+                                    "273": "\u5927\u63d0\u7434",
+                                    "249": "\u4e8c\u80e1",
+                                    "240": "\u53e4\u7434",
+                                    "224": "\u5c0f\u53f7",
+                                    "108": "\u5c0f\u63d0\u7434",
+                                    "197": "\u5355\u7c27\u7ba1",
+                                    "196": "\u8428\u514b\u65af",
+                                    "195": "\u58f0\u4e50",
+                                    "193": "\u5927\u53f7",
+                                    "182": "\u89c6\u5531\u7ec3\u8033",
+                                    "166": "\u53e4\u7b5d",
+                                    "159": "\u624b\u98ce\u7434",
+                                    "157": "\u7435\u7436",
+                                    "153": "\u957f\u7b1b",
+                                    "144": "\u7535\u5b50\u7434",
+                                    "131": "\u94a2\u7434"
+                                },
+                                "6": {
+                                    "265": "\u6f2b\u753b",
+                                    "626": "\u5176\u4ed6",
+                                    "571": "\u5927\u5b66\u8bfe\u7a0b",
+                                    "564": "\u4f53\u80b2",
+                                    "561": "\u4f1a\u8ba1",
+                                    "554": "\u6ce8\u610f\u529b",
+                                    "553": "\u8bb0\u5fc6\u529b",
+                                    "552": "\u5fc3\u7406\u8f85\u5bfc",
+                                    "550": "\u53e3\u624d",
+                                    "549": "\u5b66\u4e60\u4e60\u60ef",
+                                    "548": "\u6f5c\u80fd\u5f00\u53d1",
+                                    "547": "\u673a\u5668\u4eba\u7f16\u7a0b",
+                                    "546": "\u7f16\u7a0b",
+                                    "545": "\u8ba1\u7b97\u673a",
+                                    "298": "SAT",
+                                    "279": "\u7a7a\u624b\u9053",
+                                    "138": "\u7fbd\u6bdb\u7403",
+                                    "261": "\u6c34\u5f69",
+                                    "237": "\u7bee\u7403",
+                                    "233": "\u6cb9\u753b",
+                                    "231": "\u7d20\u63cf",
+                                    "215": "\u56f4\u68cb",
+                                    "192": "\u4e2d\u56fd\u753b",
+                                    "179": "\u56fd\u9645\u8c61\u68cb",
+                                    "167": "\u4e2d\u56fd\u8c61\u68cb",
+                                    "160": "\u5361\u901a\u753b",
+                                    "158": "\u4e66\u6cd5",
+                                    "147": "\u7f8e\u672f",
+                                    "142": "\u7f51\u7403",
+                                    "141": "\u4e52\u4e53\u7403",
+                                    "140": "\u6e38\u6cf3",
+                                    "139": "\u8dc6\u62f3\u9053"
+                                },
+                                "592": {
+                                    "595": "\u8ba1\u7b97\u673a\u5e94\u7528\u80fd\u529b\u521d\u7ea7",
+                                    "596": "\u8ba1\u7b97\u673a\u80fd\u529b\u5e94\u7528\u4e2d\u7ea7",
+                                    "597": "\u8ba1\u7b97\u673a\u57fa\u672c\u64cd\u4f5c",
+                                    "627": "\u5927\u6570\u636e",
+                                    "628": "Python",
+                                    "629": "\u7cfb\u7edf\u8fd0\u7ef4",
+                                    "630": "\u7f51\u9875\u8bbe\u8ba1",
+                                    "631": "\u7cfb\u7edf\u6846\u67b6",
+                                    "632": "\u7f51\u7ad9\u5f00\u53d1",
+                                    "633": "\u77ed\u89c6\u9891\u526a\u8f91",
+                                    "634": "\u76f4\u64ad\u4e3b\u64ad",
+                                    "635": "\u77ed\u89c6\u9891\u8fd0\u8425",
+                                    "636": "\u8425\u9500\u6587\u6848",
+                                    "637": "\u89c6\u9891\u5236\u4f5c",
+                                    "646": "MySQL"
+                                },
+                                "593": {
+                                    "598": "\u4eba\u529b\u8d44\u6e90\u57f9\u8bad",
+                                    "599": "\u7ecf\u6d4e\u5e08",
+                                    "600": "\u7535\u5b50\u5546\u52a1",
+                                    "602": "\u9020\u4ef7\u5de5\u7a0b\u5e08",
+                                    "638": "\u6ce8\u518c\u4f1a\u8ba1\u5e08",
+                                    "639": "\u4f1a\u8ba1\u4ece\u4e1a\u8d44\u683c",
+                                    "640": "\u6559\u5e08\u8d44\u683c\u8bc1"
+                                },
+                                "594": {
+                                    "601": "\u4eba\u529b\u8d44\u6e90\u5e08",
+                                    "603": "\u4e00\u7ea7\u5efa\u9020\u5e08",
+                                    "604": "\u4e8c\u7ea7\u5efa\u9020\u5e08",
+                                    "641": "\u6267\u4e1a\u533b\u5e08",
+                                    "642": "\u6267\u4e1a\u533b\u5e08",
+                                    "643": "\u6267\u4e1a\u533b\u5e08",
+                                    "644": "\u5fc3\u7406\u54a8\u8be2\u5e08",
+                                    "645": "\u5065\u5eb7\u7ba1\u7406\u5458"
+                                },
+                                "605": {
+                                    "616": "\u623f\u5c4b\u7ef4\u4fee",
+                                    "625": "\u642c\u5bb6",
+                                    "624": "\u7ba1\u9053\u758f\u901a",
+                                    "623": "\u6cb9\u70df\u673a\u6e05\u6d17",
+                                    "622": "\u7a7a\u8c03\u6e05\u6d17",
+                                    "621": "\u624b\u673a\u7ef4\u4fee",
+                                    "620": "\u7535\u8111\u7ef4\u4fee",
+                                    "619": "\u5f00\u9501\/\u6362\u9501\/\u4fee\u9501",
+                                    "618": "\u5bb6\u5177\u7ef4\u4fee",
+                                    "617": "\u5bb6\u7535\u7ef4\u4fee",
+                                    "606": "\u6708\u5ac2",
+                                    "615": "\u5a74\u5e7c\u513f\u8425\u517b",
+                                    "614": "\u50ac\u4e73\u5e08",
+                                    "613": "\u8425\u517b\u5e08",
+                                    "612": "\u949f\u70b9\u5de5",
+                                    "611": "\u966a\u62a4",
+                                    "610": "\u4fdd\u6d01",
+                                    "609": "\u4fdd\u59c6",
+                                    "608": "\u80b2\u5a74\u5e08",
+                                    "607": "\u80b2\u513f\u5ac2"
+                                }
+                            });
+                            var select = document.getElementById("node_id2");
+                            select.options.length = 0;
+                            select.options[select.options.length] = new Option('选择科目', '');
+                            for (var name in list[val]) {
+                                select.options[select.options.length] = new Option(list[val][name], name);
+                            }
+                            get_node_fee(val)
+                        }</script>
+                        <select style="border: 1px solid #E0E0E0;width:181px;height:35px;font-size: 15px;color:#999;padding-left:10px;"
+                                id="node_id1" name="node_id1" onchange="change_node_id(this.value)">
+                            <option selected="" value="">选择年级</option>
+                            <option value="1">小学</option>
+                            <option value="2">初中</option>
+                            <option value="3">高中</option>
+                            <option value="573">大学</option>
+                            <option value="4">语言</option>
+                            <option value="5">音乐</option>
+                            <option value="6">其他</option>
+                            <option value="592">计算机</option>
+                            <option value="593">职业技能</option>
+                            <option value="594">资格考试</option>
+                            <option value="605">家庭服务</option>
+                        </select><select
+                            style="border: 1px solid #E0E0E0;width:181px;height:35px;font-size: 15px;color:#999;padding-left:10px;"
+                            id="node_id2" name="node_id2">
+                        <option value="">选择科目</option>
+                        <option value="105">日语</option>
+                        <option value="132">英语口语</option>
+                        <option value="137">新概念英语</option>
+                        <option value="154">牛津英语</option>
+                        <option value="155">西班牙语</option>
+                        <option value="161">德语</option>
+                        <option value="171">商务英语</option>
+                        <option value="175">法语</option>
+                        <option value="180">韩语</option>
+                        <option value="203">意大利语</option>
+                        <option value="225">对外汉语</option>
+                        <option value="236">阿拉伯语</option>
+                        <option value="244">sbs英语</option>
+                        <option value="248">俄语</option>
+                        <option value="346">葡萄牙语</option>
+                        <option value="562">剑桥英语</option>
+                    </select></div>
+                    <div class="fg">
+                        <span>学员年级：</span><input type="text" name="stu_nianji" id="stu_nianji">
+                    </div>
+                    <div class="fg">
+                        <span>就读学校：</span><input type="text" name="school" id="school" value="">
+                    </div>
+                    <div class="fg">
+                        <span>学员概况：</span><input type="text" name="stu_desc" id="stu_desc">
+                    </div>
+                    <div class="fg rfg">
+                        <span>学员性别：</span><input type="radio" name="stu_gender" value="男" id="man"><label
+                            for="man">男</label><input type="radio" name="stu_gender" value="女" id="woman"><label
+                            for="woman">女</label>
+                    </div>
+
+                    <div class="fg">
+                        <span>详细地址：</span><input type="text" id="area_cross" name="area_cross">
+                    </div>
+                    <div class="fg">
+                        <span>授课时间：</span>
+                        一周<select name="everyweek" id="">
+                        <option value="1次">1次</option>
+                        <option value="2次">2次</option>
+                        <option value="3次">3次</option>
+                        <option value="4次">4次</option>
+                        <option value="5次">5次</option>
+                    </select>，每次<select name="everytime" id="">
+                        <option value="1小时">1小时</option>
+                        <option value="2小时" selected="">2小时</option>
+                        <option value="3小时">3小时</option>
+                        <option value="4小时">4小时</option>
+                    </select>
+                    </div>
+                </div>
+                <div class="fgroup">
+                    <h4>需要这样的老师</h4>
+                    <div class="fg rfg">
+                        <span>老师性别：</span><input type="radio" name="tea_gender" value="均可" id="nan" checked=""><label
+                            for="nan">均可</label><input type="radio" name="tea_gender" value="男" id="nan"><label
+                            for="nan">男</label><input type="radio" name="tea_gender" value="女" id="nv"><label
+                            for="nv">女</label>
+                    </div>
+                    <div class="fg">
+                        <span>课　　酬：</span><select
+                            style="border:1px solid #E0E0E0;width:365px;height:35px;font-size:15px;color:#999;paading-left:10px;"
+                            name="tea_fee" id="tea_fee">
+                        <option value="50/小时">50/小时</option>
+                        <option value="70/小时">70/小时</option>
+                        <option value="80/小时">80/小时</option>
+                        <option value="90/小时">90/小时</option>
+                        <option value="100/小时">100/小时</option>
+                        <option value="110/小时">110/小时</option>
+                        <option value="120/小时">120/小时</option>
+                    </select><!-- <input type="text" name="tea_fee" id="tea_fee"> -->
+                    </div>
+                    <div class="fg">
+                        <span>资格要求：</span>
+                        <select
+                                style="border:1px solid #E0E0E0;width:365px;height:35px;font-size:15px;color:#999;paading-left:10px;"
+                                name="tea_type" id="tea_type">
+                            <option value="在校大学生">在校大学生</option>
+                            <option value="专职老师">专职老师</option>
+                        </select>
+                    </div>
+                    <div class="fg">
+                        <span>老师要求：</span><input type="text" name="tea_desc" id="tea_desc">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <button class="btn btn-info mb-2" type="submit">下一步</button>
+                </div>
+            </form>
+        </div>
+       
+        <div class="col-lg-3"></div>
+    </div>
+</div>
+
+<script>
+
+    //ajax注册
+    function FastRegister(obj) {
+
+        var url = '{pboot:fastregister}';
+        var teachType = $('input[type=radio][name=teachType]:checked').val()
+
+        var name = $(obj).find("#name").val();
+        var phoneNumber = $(obj).find("#phoneNumber").val();
+        var WXname = $(obj).find("#WXname").val();
+        var checkcode = $(obj).find("#checkcode").val();
+        //debugger;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            data: {
+                teachType: teachType,
+                name: name,
+                phoneNumber: phoneNumber,
+                WXname: WXname,
+                checkcode: checkcode
+            },
+            success: function (response, status) {
+                if (response.code) {
+                    alert("预约成功！");
+                    location.href = response.tourl;
+                } else {
+                    $('#codeimg').click();
+                    alert(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('预约返回数据异常！');
+            }
+        });
+        return false;
+    }
+
+    $(function () {
+//jquery代码
+        //debugger;
+        getCookies();
+    });
+
+    function getCookies() {
+        var strCookie = document.cookie;
+
+        var ddRealityCityd = getCookie("RealityCity");
+        document.getElementById("cookiesRealityCity").innerHTML = ddRealityCityd;
+    }
+
+    function getCookie(name) {
+        var cookies = document.cookie;
+        var list = cookies.split("; ");     // 解析出名/值对列表
+
+        for (var i = 0; i < list.length; i++) {
+            var arr = list[i].split("=");   // 解析出名和值
+            if (arr[0] == name)
+                return decodeURIComponent(arr[1]);   // 对cookie值解码
+        }
+        return "";
+    }
+
+</script>
+
+{include file=comm/foot.html}
+
+<style type="text/css">
+
+    .my-4 {
+        width: 445px;
+        margin: 0 auto;
+    }
+    .my-4 .fgroup {
+        border-top: 1px solid #eee;
+        margin: 20px 0 30px;
+    }
+
+    .my-4 .fgroup h4 {
+        font-size: 18px;
+        color: #333;
+        margin: 25px 0;
+    }
+
+    .my-4  .fg {
+        height: 35px;
+        line-height: 35px;
+        margin-bottom: 20px;
+        font-size: 16px;
+        color: #333;
+        position: relative;
+    }
+
+    .my-4 .fgroup .fg input {
+        height: 100%;
+        line-height: 33px;
+        border: 1px solid #ccc;
+        outline: none;
+        padding: 0 10px;
+        width: 365px;
+        font-size: 16px;
+    }
+
+    .my-4 .fgroup .rfg input {
+        border: none;
+        height: auto;
+        width: auto;
+        line-height: auto;
+        margin: 0 5px 0 10px;
+        position: relative;
+        top: 1px;
+    }
+
+    .my-4 .fgroup .fg  span {
+        display: inline-block;
+        width: 80px;
+        font-size: 16px;
+        float: left;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    div {
+        display: block;
+    }
+
+    .fg ul {
+        position: absolute;
+        width: 365px;
+        border: 1px solid #50c645;
+        right: 0;
+        top: 40px;
+        z-index: 9999;
+        display: none;
+    }
+    ul {
+        list-style: none;
+    }
+
+    .fg input {
+        height: 100%;
+        line-height: 33px;
+        border: 1px solid #ccc;
+        outline: none;
+        padding: 0 10px;
+        width: 365px;
+        font-size: 16px;
+    }
+</style>

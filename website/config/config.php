@@ -2,7 +2,7 @@
 return array(
     
     // 定义CMS名称
-    'cmsname' => 'PbootCMS',
+    'cmsname' => 'TeacherCMS',
     
     // 模板内容输出缓存开关
     'tpl_html_cache' => 1,

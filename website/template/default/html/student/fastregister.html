@@ -1,0 +1,187 @@
+{include file=comm/head.html}
+
+{include file=comm/top.html}
+
+<div class="container pages">
+
+    {include file=comm/position.html}
+
+    <!-- 用户注册 -->
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-12 col-lg-6" id="miao">
+
+            <p style="text-align:center;line-height:1.1;">
+            <div style="font-family:SourceHanSansCN-Regular;">
+                <b>
+                    <div style="color:rgb(41,105,176);font-family:PuHuiTi-Bold;font-size:1.625rem;text-align: center">
+                        <span
+                                id="cookiesRealityCity"></span><span>家教预约,先听课后缴费</span>
+                    </div>
+                </b>
+                <b>
+                    <div style="color:rgb(184,49,47);font-size:1.0625rem; text-align: center">本区家教及收费查询 &nbsp;预约免费上门试课
+                    </div>
+                </b>
+            </div>
+            </p>
+            <form class="my-4" onsubmit="return FastRegister(this);">
+
+                <div class="form-group">
+                    <label for="nickname">辅导方式:</label>
+                    <input checked class name="teachType" type="radio" value="上门辅导">上门辅导
+                    <input name="teachType" type="radio" value="在线辅导">在线辅导
+                </div>
+
+
+                <div class="form-group">
+                    <label for="nickname">您的称呼</label>
+                    <input class="form-control" id="name" name="name" placeholder="请输入您的称呼,已加密" required
+                           type="text">
+                </div>
+
+                <div class="form-group">
+                    <label for="nickname">手机号码</label>
+                    <input class="form-control" id="phoneNumber" name="phoneNumber" placeholder="请输入手机号码,已加密"
+                           type="text">
+                </div>
+
+                <div class="form-group">
+                    <label for="nickname">微信号</label>
+                    <input class="form-control" id="WXname" name="WXname" placeholder="请输入微信号,已加密"
+                           type="text">
+                </div>
+
+                {pboot:if({pboot:registercodestatus}==1)}
+                <div class="form-group">
+                    <label for="checkcode">验证码</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <input class="form-control" id="checkcode" name="checkcode" placeholder="请输入验证码" required
+                                   type="text">
+                        </div>
+                        <div class="col-6">
+                            <img id="codeimg" onclick="this.src='{pboot:checkcode}?'+Math.round(Math.random()*10);"
+                                 src="{pboot:checkcode}" style="height:33px;"
+                                 title="点击刷新"/>
+                        </div>
+                    </div>
+                </div>
+                {/pboot:if}
+
+
+                <div class="form-group">
+                    <button class="btn btn-info mb-2" type="submit">下一步</button>
+                </div>
+            </form>
+        </div>
+        <a href="#miao">
+            <div class="picbox">
+                <img src="/static/upload/other/k12_new_01.jpg">
+                <img src="/static/upload/other/k12_new_02.jpg">
+                <img src="/static/upload/other/k12_new_03.jpg">
+                <img src="/static/upload/other/k12_new_04.jpg">
+                <img src="/static/upload/other/k12_new_05.jpg">
+                <img src="/static/upload/other/k12_new_06.jpg">
+                <img src="/static/upload/other/k12_new_07.jpg">
+                <img src="/static/upload/other/k12_new_08.jpg">
+                <img src="/static/upload/other/k12_new_09.jpg">
+                <img src="/static/upload/other/k12_new_10.jpg">
+                <img src="/static/upload/other/k12_new_11.jpg">
+                <img src="/static/upload/other/k12_new_12.jpg">
+                <img src="/static/upload/other/k12_new_13.jpg">
+                <img src="/static/upload/other/k12_new_14.jpg">
+            </div>
+        </a>
+        <div class="col-lg-3"></div>
+    </div>
+</div>
+
+<script>
+
+    //ajax注册
+    function FastRegister(obj) {
+
+        var url = '{pboot:fastregister}';
+        var teachType = $('input[type=radio][name=teachType]:checked').val()
+
+        var name = $(obj).find("#name").val();
+        var phoneNumber = $(obj).find("#phoneNumber").val();
+        var WXname = $(obj).find("#WXname").val();
+        var checkcode = $(obj).find("#checkcode").val();
+        //debugger;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            data: {
+                teachType: teachType,
+                name: name,
+                phoneNumber: phoneNumber,
+                WXname: WXname,
+                checkcode: checkcode
+            },
+            success: function (response, status) {
+                if (response.code) {
+                    alert("预约成功！您可以提交详细信息，为您快速精准匹配老师");
+                    location.href = response.tourl;
+                } else {
+                    $('#codeimg').click();
+                    alert(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('预约返回数据异常！');
+            }
+        });
+        return false;
+    }
+
+    $(function () {
+//jquery代码
+        //debugger;
+        getCookies();
+    });
+
+    function getCookies() {
+        var strCookie = document.cookie;
+
+        var ddRealityCityd = getCookie("RealityCity");
+        document.getElementById("cookiesRealityCity").innerHTML = ddRealityCityd;
+    }
+
+    function getCookie(name) {
+        var cookies = document.cookie;
+        var list = cookies.split("; ");     // 解析出名/值对列表
+
+        for (var i = 0; i < list.length; i++) {
+            var arr = list[i].split("=");   // 解析出名和值
+            if (arr[0] == name)
+                return decodeURIComponent(arr[1]);   // 对cookie值解码
+        }
+        return "";
+    }
+
+</script>
+
+{include file=comm/foot.html}
+
+<style type="text/css">
+    .inputname {
+        font-size: 16px;
+        border: 1px solid #b5b5b5;
+        height: 39px;
+        text-indent: 10px;
+    }
+
+    .picbox {
+        width: 100%;
+        background: #ddeeff;
+    }
+
+    .picbox img {
+        width: 100%;
+        height: auto;
+        vertical-align: top;
+    }
+</style>

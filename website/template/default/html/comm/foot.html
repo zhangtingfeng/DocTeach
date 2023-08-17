@@ -85,7 +85,9 @@
             <p>24小时免费咨询</p>
             <p>请输入您的联系电话，座机请加区号</p>
             <form  onsubmit="return subform(this);">
-            	<p><input type="text" name="tel" id="tel" autocomplete="off"  placeholder="请输入您的电话号码" required maxlength="30"></p>
+            	<p>
+                    <input type="text" name="tel" id="tel" autocomplete="off"  placeholder="请输入您的电话号码" required maxlength="30">
+                  </p>
                 <p><button type="submit">免费通话</button></p>
             </form>
         </dt>
@@ -129,7 +131,8 @@ function subform(obj){
     url: url,
     dataType: 'json',
     data: {
-    	tel: tel
+    	tel: tel,
+        telfoot:1
     },
     success: function (response, status) {
       if(response.code){
